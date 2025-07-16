@@ -1,0 +1,170 @@
+<div class="math-card">
+  {{FrontSide}}
+  
+  <hr class="divider">
+  
+  <div class="solution-section">
+    <!-- 设置面板 -->
+    <div class="settings-panel">
+      <h3>卡片设置</h3>
+      <div class="setting">
+        <label>字体大小: <span id="fontSizeValue">16px</span></label>
+        <input type="range" min="12" max="24" value="16" id="fontSizeSlider">
+      </div>
+      <div class="setting">
+        <label>行间距: <span id="lineHeightValue">1.5</span></label>
+        <input type="range" min="13" max="20" value="15" id="lineHeightSlider">
+      </div>
+      <button onclick="applyDefaultSettings()">恢复默认</button>
+    </div>
+    
+    {{#KeyConcept}}
+    <div class="concept-box">
+      <div class="section-title">核心概念</div>
+      <div class="math-content">{{KeyConcept}}</div>
+    </div>
+    {{/KeyConcept}}
+    
+    {{#Formula}}
+    <div class="formula-box">
+      <div class="section-title">关键公式</div>
+      <div class="math-content">{{Formula}}</div>
+    </div>
+    {{/Formula}}
+    
+    <!-- 修复步骤显示 -->
+    <div class="steps-container">
+      <div class="section-title">解题步骤</div>
+      <div id="stepsContent"></div>
+    </div>
+    
+    <div class="answer-box">
+      <div class="section-title">最终答案</div>
+      <div class="math-content">{{Answer}}</div>
+    </div>
+    
+    {{#CommonMistakes}}
+    <div class="mistake-box">
+      <div class="section-title">易错警示</div>
+      <ul class="mistake-list" id="mistakesList"></ul>
+    </div>
+    {{/CommonMistakes}}
+  </div>
+</div>
+
+<script>
+// 步骤处理函数
+function processSteps() {
+  const stepsContent = document.getElementById('stepsContent');
+  if (!stepsContent) return;
+  
+  const stepsData = "{{Steps}}";
+  if (!stepsData) return;
+  
+  const steps = stepsData.split("||");
+  stepsContent.innerHTML = '';
+  
+  steps.forEach((step, index) => {
+    const stepElement = document.createElement('div');
+    stepElement.className = 'step';
+    stepElement.innerHTML = `
+      <div class="step-header" onclick="toggleStep(this)">
+        <span class="step-number">${index + 1}</span>
+        <span class="toggle-icon">▼</span>
+      </div>
+      <div class="step-content">
+        <div class="math-content">${step}</div>
+      </div>
+    `;
+    stepsContent.appendChild(stepElement);
+  });
+}
+
+// 易错点处理
+function processMistakes() {
+  const mistakesList = document.getElementById('mistakesList');
+  if (!mistakesList) return;
+  
+  const mistakesData = "{{CommonMistakes}}";
+  if (!mistakesData) return;
+  
+  const mistakes = mistakesData.split("|");
+  mistakesList.innerHTML = '';
+  
+  mistakes.forEach(mistake => {
+    if (mistake.trim()) {
+      const li = document.createElement('li');
+      li.textContent = mistake;
+      mistakesList.appendChild(li);
+    }
+  });
+}
+
+// 步骤折叠功能
+function toggleStep(header) {
+  const content = header.nextElementSibling;
+  const icon = header.querySelector('.toggle-icon');
+  
+  if (content.style.display === 'none' || !content.style.display) {
+    content.style.display = 'block';
+    icon.textContent = '▲';
+  } else {
+    content.style.display = 'none';
+    icon.textContent = '▼';
+  }
+}
+
+// 设置功能
+const settings = {
+  fontSize: 16,
+  lineHeight: 1.5
+};
+
+function updateSettings() {
+  settings.fontSize = parseInt(document.getElementById('fontSizeSlider').value);
+  settings.lineHeight = parseInt(document.getElementById('lineHeightSlider').value) / 10;
+  
+  document.getElementById('fontSizeValue').textContent = settings.fontSize + 'px';
+  document.getElementById('lineHeightValue').textContent = settings.lineHeight;
+  
+  applySettings();
+}
+
+function applySettings() {
+  document.documentElement.style.setProperty('--base-font-size', `${settings.fontSize}px`);
+  document.documentElement.style.setProperty('--line-height', settings.lineHeight);
+}
+
+function applyDefaultSettings() {
+  settings.fontSize = 16;
+  settings.lineHeight = 1.5;
+  document.getElementById('fontSizeSlider').value = 16;
+  document.getElementById('lineHeightSlider').value = 15;
+  updateSettings();
+}
+
+// 初始化函数
+function initBack() {
+  // 处理内容
+  processSteps();
+  processMistakes();
+  
+  // 初始化设置
+  document.getElementById('fontSizeSlider').addEventListener('input', updateSettings);
+  document.getElementById('lineHeightSlider').addEventListener('input', updateSettings);
+  
+  // 折叠所有步骤
+  document.querySelectorAll('.step-content').forEach(content => {
+    content.style.display = 'none';
+  });
+  
+  // 应用设置
+  applySettings();
+  
+  // 渲染数学公式
+  MathJax.typesetPromise().catch(console.error);
+}
+
+// 执行初始化
+setTimeout(initBack, 50);
+</script>

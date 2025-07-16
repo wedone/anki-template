@@ -1,0 +1,157 @@
+<div class="math-card">
+  <div class="card-header">
+    {{#Difficulty}}
+    <div class="difficulty-badge">
+      难度: 
+      <span class="difficulty-level" id="difficultyDisplay">
+        {{Difficulty}}
+      </span>
+    </div>
+    {{/Difficulty}}
+    
+    <div class="settings-button" id="settingsButton" onclick="toggleSettingsModal()">
+      <span class="settings-icon">⚙️</span> 设置
+    </div>
+  </div>
+  
+  <div class="question-content">
+    {{#Image}}
+    <div class="question-image">
+      {{Image}}
+    </div>
+    {{/Image}}
+    
+    <div class="question-text math-content">{{Question}}</div>
+  </div>
+  
+  {{#Hint}}
+  <div class="hint" onclick="this.classList.toggle('revealed')">
+    提示: <span class="hint-text">{{Hint}}</span>
+  </div>
+  {{/Hint}}
+  
+  <!-- 设置弹窗 -->
+  <div id="settingsModal" class="settings-modal">
+    <div class="settings-modal-content">
+      <div class="settings-modal-header">
+        <h3>卡片设置</h3>
+        <span class="close-button" onclick="toggleSettingsModal()">&times;</span>
+      </div>
+      <div class="settings-modal-body">
+        <div class="setting">
+          <label>字体大小: <span id="fontSizeValue">16px</span></label>
+          <input type="range" min="12" max="24" value="16" id="fontSizeSlider">
+        </div>
+        <div class="setting">
+          <label>行间距: <span id="lineHeightValue">1.5</span></label>
+          <input type="range" min="13" max="20" value="15" id="lineHeightSlider">
+        </div>
+        <button onclick="applyDefaultSettings()">恢复默认</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// 更新难度显示
+function updateDifficultyStars() {
+  const display = document.getElementById('difficultyDisplay');
+  if (display) {
+    const level = parseInt(display.textContent);
+    let stars = '';
+    switch(level) {
+      case 1: stars = '★☆☆☆☆'; break;
+      case 2: stars = '★★☆☆☆'; break;
+      case 3: stars = '★★★☆☆'; break;
+      case 4: stars = '★★★★☆'; break;
+      case 5: stars = '★★★★★'; break;
+      default: stars = level;
+    }
+    display.textContent = stars;
+  }
+}
+
+// 设置功能
+const settings = {
+  fontSize: 16,
+  lineHeight: 1.5
+};
+
+function toggleSettingsModal() {
+  const modal = document.getElementById('settingsModal');
+  if (modal.classList.contains('show')) {
+    modal.classList.remove('show');
+  } else {
+    modal.classList.add('show');
+    // 加载当前设置到滑块
+    document.getElementById('fontSizeSlider').value = settings.fontSize;
+    document.getElementById('lineHeightSlider').value = settings.lineHeight * 10;
+    updateSettingsDisplay();
+  }
+}
+
+function updateSettings() {
+  settings.fontSize = parseInt(document.getElementById('fontSizeSlider').value);
+  settings.lineHeight = parseInt(document.getElementById('lineHeightSlider').value) / 10;
+  
+  updateSettingsDisplay();
+  applySettings();
+}
+
+function updateSettingsDisplay() {
+  document.getElementById('fontSizeValue').textContent = settings.fontSize + 'px';
+  document.getElementById('lineHeightValue').textContent = settings.lineHeight;
+}
+
+function applySettings() {
+  document.documentElement.style.setProperty('--base-font-size', `${settings.fontSize}px`);
+  document.documentElement.style.setProperty('--line-height', settings.lineHeight);
+}
+
+function applyDefaultSettings() {
+  settings.fontSize = 16;
+  settings.lineHeight = 1.5;
+  document.getElementById('fontSizeSlider').value = 16;
+  document.getElementById('lineHeightSlider').value = 15;
+  updateSettings();
+}
+
+// 初始化函数
+function initFront() {
+  // 更新难度显示
+  updateDifficultyStars();
+  
+  // 初始化设置
+  document.getElementById('fontSizeSlider').addEventListener('input', updateSettings);
+  document.getElementById('lineHeightSlider').addEventListener('input', updateSettings);
+  
+  // 应用设置
+  applySettings();
+  
+  // 点击模态框外部关闭模态框
+  window.addEventListener('click', function(event) {
+    const modal = document.getElementById('settingsModal');
+    if (event.target === modal) {
+      modal.classList.remove('show');
+    }
+  });
+  
+  // 渲染数学公式
+  MathJax.typesetPromise().catch(console.error);
+}
+
+// MathJax 配置
+MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']]
+  },
+  options: {
+    enableMenu: false
+  }
+};
+
+// 执行初始化
+setTimeout(initFront, 50);
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>

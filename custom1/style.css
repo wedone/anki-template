@@ -1,0 +1,349 @@
+:root {
+  --card-padding: 8px;
+  --base-font-size: 16px;
+  --line-height: 1.5;
+}
+
+.math-card {
+  font-family: "Segoe UI", "Noto Sans", system-ui, sans-serif;
+  font-size: var(--base-font-size);
+  line-height: var(--line-height);
+  color: #333;
+  padding: var(--card-padding);
+  margin: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* 设置面板 */
+.settings-panel {
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 20px;
+}
+
+.settings-panel h3 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  color: #2c3e50;
+  border-bottom: 1px solid #3498db;
+  padding-bottom: 8px;
+}
+
+.setting {
+  margin-bottom: 15px;
+}
+
+.setting label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.setting input[type="range"] {
+  width: 100%;
+}
+
+/* 内容区域 */
+.section-title {
+  font-weight: bold;
+  color: #2980b9;
+  margin: 10px 0 8px;
+  font-size: calc(var(--base-font-size) * 1.05);
+}
+
+.divider {
+  border: 0;
+  height: 1px;
+  background: #3498db;
+  margin: 15px 0;
+}
+
+/* 卡片头部 */
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  position: relative;
+}
+
+/* 难度标记 */
+.difficulty-badge {
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  padding: 3px 8px;
+  font-size: calc(var(--base-font-size) * 0.8);
+  z-index: 5;
+}
+
+.difficulty-level {
+  color: #e74c3c;
+  font-weight: bold;
+}
+
+/* 设置按钮 */
+.settings-button {
+  background: #3498db;
+  color: white;
+  border-radius: 8px;
+  padding: 5px 10px;
+  font-size: calc(var(--base-font-size) * 0.8);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: background-color 0.2s;
+}
+
+.settings-button:hover {
+  background: #2980b9;
+}
+
+.settings-icon {
+  font-size: calc(var(--base-font-size) * 1.1);
+}
+
+/* 提示样式 */
+.hint {
+  margin-top: 10px;
+  padding: 8px;
+  background-color: #e3f2fd;
+  border-radius: 4px;
+  border-left: 2px solid #2196f3;
+  color: #0d47a1;
+  cursor: pointer;
+  font-size: calc(var(--base-font-size) * 0.9);
+}
+
+.hint .hint-text {
+  opacity: 0.5;
+}
+
+.hint.revealed .hint-text {
+  opacity: 1;
+}
+
+/* 核心概念和公式 */
+.concept-box, .formula-box {
+  padding: 8px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  font-size: calc(var(--base-font-size) * 0.95);
+}
+
+.concept-box {
+  background-color: #e8f5e9;
+  border-left: 2px solid #4caf50;
+}
+
+.formula-box {
+  background-color: #fff8e1;
+  border-left: 2px solid #ffc107;
+}
+
+/* 解题步骤 */
+.steps-container {
+  margin: 15px 0;
+}
+
+.step {
+  margin-bottom: 10px;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.step-header {
+  background-color: #e3f2fd;
+  padding: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.step-number {
+  background: #3498db;
+  color: white;
+  min-width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(var(--base-font-size) * 0.9);
+}
+
+.toggle-icon {
+  font-size: calc(var(--base-font-size) * 0.9);
+}
+
+.step-content {
+  background-color: #f8fdff;
+  padding: 10px;
+  display: none;
+}
+
+/* 最终答案 */
+.answer-box {
+  margin: 15px 0;
+  padding: 12px;
+  background-color: #e1f5fe;
+  border-radius: 6px;
+  border: 1px dashed #0288d1;
+  font-weight: bold;
+  font-size: calc(var(--base-font-size) * 1.05);
+}
+
+/* 易错点 */
+.mistake-box {
+  background-color: #ffebee;
+  border-radius: 6px;
+  padding: 12px;
+  margin-top: 15px;
+  border-left: 2px solid #f44336;
+  font-size: calc(var(--base-font-size) * 0.9);
+}
+
+.mistake-list {
+  margin: 8px 0 0 15px;
+  padding: 0;
+}
+
+.mistake-list li {
+  margin-bottom: 6px;
+  color: #c62828;
+}
+
+/* 图片样式 */
+.question-image {
+  text-align: center;
+  margin: 10px 0;
+}
+
+.question-image img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+}
+
+/* PC端优化 */
+@media (min-width: 769px) {
+  .math-card {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 15px;
+  }
+}
+
+/* 设置弹窗样式 */
+.settings-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+}
+
+.settings-modal.show {
+  display: flex;
+}
+
+.settings-modal-content {
+  background-color: white;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+}
+
+.settings-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.settings-modal-header h3 {
+  margin: 0;
+  font-size: calc(var(--base-font-size) * 1.1);
+  color: #333;
+}
+
+.close-button {
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+  color: #666;
+}
+
+.close-button:hover {
+  color: #333;
+}
+
+.settings-modal-body {
+  padding: 15px;
+}
+
+.setting {
+  margin-bottom: 15px;
+}
+
+.setting label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #555;
+}
+
+.setting input[type="range"] {
+  width: 100%;
+  margin: 8px 0;
+}
+
+.settings-modal-body button {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 8px 15px;
+  cursor: pointer;
+  font-size: calc(var(--base-font-size) * 0.9);
+  transition: background-color 0.2s;
+}
+
+.settings-modal-body button:hover {
+  background-color: #2980b9;
+}
+
+/* 移动端优化 */
+@media (max-width: 768px) {
+  :root {
+    --card-padding: 8px;
+  }
+  
+  .step-header {
+    padding: 8px;
+  }
+  
+  .step-content {
+    padding: 8px;
+  }
+  
+  .settings-modal-content {
+    width: 95%;
+    max-width: 350px;
+  }
+}

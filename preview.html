@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anki卡片预览</title>
+  <style>
+    body {
+      font-family: "Segoe UI", "Noto Sans", system-ui, sans-serif;
+      background-color: #f5f5f5;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .preview-container {
+      width: 100%;
+      max-width: 800px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    
+    .card-container {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      width: 100%;
+    }
+    
+    .card-header {
+      background-color: #3498db;
+      color: white;
+      padding: 10px 15px;
+      font-weight: bold;
+    }
+    
+    .card-content {
+      padding: 0;
+    }
+    
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid #ddd;
+    }
+    
+    .tab {
+      padding: 10px 15px;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+    }
+    
+    .tab.active {
+      border-bottom-color: #3498db;
+      font-weight: bold;
+    }
+    
+    .tab-content {
+      display: none;
+      padding: 15px;
+    }
+    
+    .tab-content.active {
+      display: block;
+    }
+    
+    h1 {
+      color: #2c3e50;
+      margin-bottom: 20px;
+    }
+    
+    .toggle-button {
+      background-color: #3498db;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+      margin-bottom: 10px;
+      align-self: flex-start;
+    }
+    
+    .toggle-button:hover {
+      background-color: #2980b9;
+    }
+  </style>
+  <!-- 引入模板的样式 -->
+  <style>
+    /* 从style.css复制的样式 */
+    :root {
+      --card-padding: 8px;
+      --base-font-size: 16px;
+      --line-height: 1.5;
+    }
+
+    .math-card {
+      font-family: "Segoe UI", "Noto Sans", system-ui, sans-serif;
+      font-size: var(--base-font-size);
+      line-height: var(--line-height);
+      color: #333;
+      padding: var(--card-padding);
+      margin: 0;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    /* 设置面板 */
+    .settings-panel {
+      background: #f8f9fa;
+      border: 1px solid #dee2e6;
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 20px;
+    }
+
+    .settings-panel h3 {
+      margin-top: 0;
+      margin-bottom: 15px;
+      color: #2c3e50;
+      border-bottom: 1px solid #3498db;
+      padding-bottom: 8px;
+    }
+
+    .setting {
+      margin-bottom: 15px;
+    }
+
+    .setting label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+
+    .setting input[type="range"] {
+      width: 100%;
+    }
+
+    /* 内容区域 */
+    .section-title {
+      font-weight: bold;
+      color: #2980b9;
+      margin: 10px 0 8px;
+      font-size: calc(var(--base-font-size) * 1.05);
+    }
+
+    .divider {
+      border: 0;
+      height: 1px;
+      background: #3498db;
+      margin: 15px 0;
+    }
+
+    /* 难度标记 */
+    .difficulty-badge {
+      position: absolute;
+      top: var(--card-padding);
+      left: var(--card-padding);
+      background: #f8f9fa;
+      border: 1px solid #dee2e6;
+      border-radius: 8px;
+      padding: 3px 8px;
+      font-size: calc(var(--base-font-size) * 0.8);
+      z-index: 5;
+    }
+
+    .difficulty-level {
+      color: #e74c3c;
+      font-weight: bold;
+    }
+
+    /* 提示样式 */
+    .hint {
+      margin-top: 10px;
+      padding: 8px;
+      background-color: #e3f2fd;
+      border-radius: 4px;
+      border-left: 2px solid #2196f3;
+      color: #0d47a1;
+      cursor: pointer;
+      font-size: calc(var(--base-font-size) * 0.9);
+    }
+
+    .hint .hint-text {
+      opacity: 0.5;
+    }
+
+    .hint.revealed .hint-text {
+      opacity: 1;
+    }
+
+    /* 核心概念和公式 */
+    .concept-box, .formula-box {
+      padding: 8px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      font-size: calc(var(--base-font-size) * 0.95);
+    }
+
+    .concept-box {
+      background-color: #e8f5e9;
+      border-left: 2px solid #4caf50;
+    }
+
+    .formula-box {
+      background-color: #fff8e1;
+      border-left: 2px solid #ffc107;
+    }
+
+    /* 解题步骤 */
+    .steps-container {
+      margin: 15px 0;
+    }
+
+    .step {
+      margin-bottom: 10px;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+
+    .step-header {
+      background-color: #e3f2fd;
+      padding: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .step-number {
+      background: #3498db;
+      color: white;
+      min-width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: calc(var(--base-font-size) * 0.9);
+    }
+
+    .toggle-icon {
+      font-size: calc(var(--base-font-size) * 0.9);
+    }
+
+    .step-content {
+      background-color: #f8fdff;
+      padding: 10px;
+      display: none;
+    }
+
+    /* 最终答案 */
+    .answer-box {
+      margin: 15px 0;
+      padding: 12px;
+      background-color: #e1f5fe;
+      border-radius: 6px;
+      border: 1px dashed #0288d1;
+      font-weight: bold;
+      font-size: calc(var(--base-font-size) * 1.05);
+    }
+
+    /* 易错点 */
+    .mistake-box {
+      background-color: #ffebee;
+      border-radius: 6px;
+      padding: 12px;
+      margin-top: 15px;
+      border-left: 2px solid #f44336;
+      font-size: calc(var(--base-font-size) * 0.9);
+    }
+
+    .mistake-list {
+      margin: 8px 0 0 15px;
+      padding: 0;
+    }
+
+    .mistake-list li {
+      margin-bottom: 6px;
+      color: #c62828;
+    }
+
+    /* 图片样式 */
+    .question-image {
+      text-align: center;
+      margin: 10px 0;
+    }
+
+    .question-image img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 4px;
+    }
+
+    /* PC端优化 */
+    @media (min-width: 769px) {
+      .math-card {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 15px;
+      }
+    }
+
+    /* 移动端优化 */
+    @media (max-width: 768px) {
+      :root {
+        --card-padding: 8px;
+      }
+      
+      .step-header {
+        padding: 8px;
+      }
+      
+      .step-content {
+        padding: 8px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Anki数学卡片预览</h1>
+  
+  <div class="preview-container">
+    <button id="toggleView" class="toggle-button">显示答案</button>
+    
+    <div class="card-container">
+      <div class="card-header">卡片预览</div>
+      <div class="card-content">
+        <div class="tabs">
+          <div class="tab active" data-tab="front">正面</div>
+          <div class="tab" data-tab="back">背面</div>
+        </div>
+        
+        <div id="frontTab" class="tab-content active">
+          <!-- 正面模板内容 -->
+          <div class="math-card">
+            <div class="card-header">
+              <div class="difficulty-badge">
+                难度: 
+                <span class="difficulty-level" id="difficultyDisplay">
+                  3
+                </span>
+              </div>
+              
+              <div class="settings-button" id="settingsButton" onclick="toggleSettingsModal()">
+                <span class="settings-icon">⚙️</span> 设置
+              </div>
+            </div>
+            
+            <div class="question-content">
+              <div class="question-image">
+                <img src="https://via.placeholder.com/400x200?text=数学图表" alt="数学图表">
+              </div>
+              
+              <div class="question-text math-content">求函数 $f(x) = 2x^3 - 3x^2 + 4x - 5$ 在区间 $[1, 2]$ 上的最大值和最小值。</div>
+            </div>
+            
+            <div class="hint" onclick="this.classList.toggle('revealed')">
+              提示: <span class="hint-text">考虑使用导数找出函数的临界点，然后比较临界点和端点的函数值。</span>
+            </div>
+            
+            <!-- 设置弹窗 -->
+            <div id="settingsModal" class="settings-modal">
+              <div class="settings-modal-content">
+                <div class="settings-modal-header">
+                  <h3>卡片设置</h3>
+                  <span class="close-button" onclick="toggleSettingsModal()">&times;</span>
+                </div>
+                <div class="settings-modal-body">
+                  <div class="setting">
+                    <label>字体大小: <span id="fontSizeValue">16px</span></label>
+                    <input type="range" min="12" max="24" value="16" id="fontSizeSlider">
+                  </div>
+                  <div class="setting">
+                    <label>行间距: <span id="lineHeightValue">1.5</span></label>
+                    <input type="range" min="13" max="20" value="15" id="lineHeightSlider">
+                  </div>
+                  <button onclick="applyDefaultSettings()">恢复默认</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="backTab" class="tab-content">
+          <!-- 背面模板内容 -->
+          <div class="math-card">
+            <!-- 前面内容 -->
+            <div class="difficulty-badge">
+              难度: 
+              <span class="difficulty-level">
+                ★★★☆☆
+              </span>
+            </div>
+            
+            <div class="question-content">
+              <div class="question-image">
+                <img src="https://via.placeholder.com/400x200?text=数学图表" alt="数学图表">
+              </div>
+              
+              <div class="question-text math-content">求函数 $f(x) = 2x^3 - 3x^2 + 4x - 5$ 在区间 $[1, 2]$ 上的最大值和最小值。</div>
+            </div>
+            
+            <div class="hint revealed">
+              提示: <span class="hint-text">考虑使用导数找出函数的临界点，然后比较临界点和端点的函数值。</span>
+            </div>
+            
+            <hr class="divider">
+            
+            <div class="solution-section">
+              <!-- 设置面板 -->
+              <div class="settings-panel">
+                <h3>卡片设置</h3>
+                <div class="setting">
+                  <label>字体大小: <span id="fontSizeValue">16px</span></label>
+                  <input type="range" min="12" max="24" value="16" id="fontSizeSlider">
+                </div>
+                <div class="setting">
+                  <label>行间距: <span id="lineHeightValue">1.5</span></label>
+                  <input type="range" min="13" max="20" value="15" id="lineHeightSlider">
+                </div>
+                <button onclick="applyDefaultSettings()">恢复默认</button>
+              </div>
+              
+              <div class="concept-box">
+                <div class="section-title">核心概念</div>
+                <div class="math-content">函数的极值与导数的关系：函数的极值点对应导数为零的点或导数不存在的点。在闭区间上，函数的最大值和最小值可能出现在区间端点或区间内的临界点上。</div>
+              </div>
+              
+              <div class="formula-box">
+                <div class="section-title">关键公式</div>
+                <div class="math-content">$f'(x) = 6x^2 - 6x + 4$</div>
+              </div>
+              
+              <!-- 解题步骤 -->
+              <div class="steps-container">
+                <div class="section-title">解题步骤</div>
+                <div id="stepsContent">
+                  <div class="step">
+                    <div class="step-header" onclick="toggleStep(this)">
+                      <span class="step-number">1</span>
+                      <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="step-content">
+                      <div class="math-content">求函数的导数：$f'(x) = 6x^2 - 6x + 4$</div>
+                    </div>
+                  </div>
+                  
+                  <div class="step">
+                    <div class="step-header" onclick="toggleStep(this)">
+                      <span class="step-number">2</span>
+                      <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="step-content">
+                      <div class="math-content">令 $f'(x) = 0$，解得 $x = \frac{6 \pm \sqrt{36 - 96}}{12} = \frac{6 \pm \sqrt{-60}}{12}$。由于判别式小于0，方程无实数解，所以函数在区间内没有临界点。</div>
+                    </div>
+                  </div>
+                  
+                  <div class="step">
+                    <div class="step-header" onclick="toggleStep(this)">
+                      <span class="step-number">3</span>
+                      <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="step-content">
+                      <div class="math-content">计算区间端点的函数值：
+$f(1) = 2(1)^3 - 3(1)^2 + 4(1) - 5 = 2 - 3 + 4 - 5 = -2$
+$f(2) = 2(2)^3 - 3(2)^2 + 4(2) - 5 = 16 - 12 + 8 - 5 = 7$</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="answer-box">
+                <div class="section-title">最终答案</div>
+                <div class="math-content">函数 $f(x) = 2x^3 - 3x^2 + 4x - 5$ 在区间 $[1, 2]$ 上的最小值为 $-2$（当 $x = 1$ 时），最大值为 $7$（当 $x = 2$ 时）。</div>
+              </div>
+              
+              <div class="mistake-box">
+                <div class="section-title">易错警示</div>
+                <ul class="mistake-list" id="mistakesList">
+                  <li>忘记检查区间端点的函数值</li>
+                  <li>导数计算错误</li>
+                  <li>解导数方程时计算错误</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+  <script>
+    // MathJax 配置
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      },
+      options: {
+        enableMenu: false
+      }
+    };
+    
+    // 更新难度显示
+    function updateDifficultyStars() {
+      const display = document.getElementById('difficultyDisplay');
+      if (display) {
+        const level = parseInt(display.textContent);
+        let stars = '';
+        switch(level) {
+          case 1: stars = '★☆☆☆☆'; break;
+          case 2: stars = '★★☆☆☆'; break;
+          case 3: stars = '★★★☆☆'; break;
+          case 4: stars = '★★★★☆'; break;
+          case 5: stars = '★★★★★'; break;
+          default: stars = level;
+        }
+        display.textContent = stars;
+      }
+    }
+    
+    // 步骤折叠功能
+    function toggleStep(header) {
+      const content = header.nextElementSibling;
+      const icon = header.querySelector('.toggle-icon');
+      
+      if (content.style.display === 'none' || !content.style.display) {
+        content.style.display = 'block';
+        icon.textContent = '▲';
+      } else {
+        content.style.display = 'none';
+        icon.textContent = '▼';
+      }
+    }
+    
+    // 设置功能
+    const settings = {
+      fontSize: 16,
+      lineHeight: 1.5
+    };
+    
+    function toggleSettingsModal() {
+      const modal = document.getElementById('settingsModal');
+      if (modal.classList.contains('show')) {
+        modal.classList.remove('show');
+      } else {
+        modal.classList.add('show');
+        // 加载当前设置到滑块
+        document.getElementById('fontSizeSlider').value = settings.fontSize;
+        document.getElementById('lineHeightSlider').value = settings.lineHeight * 10;
+        updateSettingsDisplay();
+      }
+    }
+
+    function updateSettings() {
+      settings.fontSize = parseInt(document.getElementById('fontSizeSlider').value);
+      settings.lineHeight = parseInt(document.getElementById('lineHeightSlider').value) / 10;
+      
+      updateSettingsDisplay();
+      applySettings();
+    }
+    
+    function updateSettingsDisplay() {
+      document.getElementById('fontSizeValue').textContent = settings.fontSize + 'px';
+      document.getElementById('lineHeightValue').textContent = settings.lineHeight;
+    }
+
+    function applySettings() {
+      document.documentElement.style.setProperty('--base-font-size', `${settings.fontSize}px`);
+      document.documentElement.style.setProperty('--line-height', settings.lineHeight);
+    }
+
+    function applyDefaultSettings() {
+      settings.fontSize = 16;
+      settings.lineHeight = 1.5;
+      document.getElementById('fontSizeSlider').value = 16;
+      document.getElementById('lineHeightSlider').value = 15;
+      updateSettings();
+    }
+    
+    // 标签切换功能
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        // 移除所有标签的active类
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        
+        // 添加当前标签的active类
+        tab.classList.add('active');
+        const tabId = tab.getAttribute('data-tab');
+        document.getElementById(tabId + 'Tab').classList.add('active');
+      });
+    });
+    
+    // 切换视图按钮
+    document.getElementById('toggleView').addEventListener('click', () => {
+      const button = document.getElementById('toggleView');
+      const frontTab = document.getElementById('frontTab');
+      const backTab = document.getElementById('backTab');
+      const frontTabButton = document.querySelector('.tab[data-tab="front"]');
+      const backTabButton = document.querySelector('.tab[data-tab="back"]');
+      
+      if (frontTab.classList.contains('active')) {
+        // 切换到背面
+        frontTab.classList.remove('active');
+        backTab.classList.add('active');
+        frontTabButton.classList.remove('active');
+        backTabButton.classList.add('active');
+        button.textContent = '显示问题';
+      } else {
+        // 切换到正面
+        backTab.classList.remove('active');
+        frontTab.classList.add('active');
+        backTabButton.classList.remove('active');
+        frontTabButton.classList.add('active');
+        button.textContent = '显示答案';
+      }
+    });
+    
+    // 初始化
+    document.addEventListener('DOMContentLoaded', () => {
+      // 更新难度显示
+      updateDifficultyStars();
+      
+      // 初始化设置
+      document.getElementById('fontSizeSlider').addEventListener('input', updateSettings);
+      document.getElementById('lineHeightSlider').addEventListener('input', updateSettings);
+      
+      // 点击模态框外部关闭模态框
+      window.addEventListener('click', function(event) {
+        const modal = document.getElementById('settingsModal');
+        if (event.target === modal) {
+          modal.classList.remove('show');
+        }
+      });
+      
+      // 渲染数学公式
+      MathJax.typesetPromise().catch(console.error);
+    });
+  </script>
+</body>
+</html>
