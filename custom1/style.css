@@ -142,20 +142,23 @@
 
 /* 核心概念和公式 */
 .concept-box, .formula-box {
+  margin: 8px 0;
   padding: 8px;
-  margin-bottom: 10px;
-  border-radius: 5px;
-  font-size: calc(var(--base-font-size) * 0.95);
+  background-color: #e8f5e9;
+  border-radius: 6px;
+  border: 1px dashed #4caf50;
+  font-weight: normal;
+  font-size: var(--base-font-size);
 }
 
 .concept-box {
   background-color: #e8f5e9;
-  border-left: 2px solid #4caf50;
+  border: 1px dashed #4caf50;
 }
 
 .formula-box {
   background-color: #fff8e1;
-  border-left: 2px solid #ffc107;
+  border: 1px dashed #ffc107;
 }
 
 /* 解题步骤 */
@@ -215,12 +218,13 @@
 
 /* 易错点 */
 .mistake-box {
+  margin: 8px 0;
+  padding: 8px;
   background-color: #ffebee;
   border-radius: 6px;
-  padding: 12px;
-  margin-top: 15px;
-  border-left: 2px solid #f44336;
-  font-size: calc(var(--base-font-size) * 0.9);
+  border: 1px dashed #f44336;
+  font-weight: normal;
+  font-size: var(--base-font-size);
 }
 
 .mistake-list {
