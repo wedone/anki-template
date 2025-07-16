@@ -372,8 +372,6 @@
   <h1>Anki数学卡片预览</h1>
   
   <div class="preview-container">
-    <button id="toggleView" class="toggle-button">显示答案</button>
-    
     <div class="card-container">
       <div class="card-header">卡片预览</div>
       <div class="card-content">
@@ -638,30 +636,7 @@ $f(2) = 2(2)^3 - 3(2)^2 + 4(2) - 5 = 16 - 12 + 8 - 5 = 7$</div>
       });
     });
     
-    // 切换视图按钮
-    document.getElementById('toggleView').addEventListener('click', () => {
-      const button = document.getElementById('toggleView');
-      const frontTab = document.getElementById('frontTab');
-      const backTab = document.getElementById('backTab');
-      const frontTabButton = document.querySelector('.tab[data-tab="front"]');
-      const backTabButton = document.querySelector('.tab[data-tab="back"]');
-      
-      if (frontTab.classList.contains('active')) {
-        // 切换到背面
-        frontTab.classList.remove('active');
-        backTab.classList.add('active');
-        frontTabButton.classList.remove('active');
-        backTabButton.classList.add('active');
-        button.textContent = '显示问题';
-      } else {
-        // 切换到正面
-        backTab.classList.remove('active');
-        frontTab.classList.add('active');
-        backTabButton.classList.remove('active');
-        frontTabButton.classList.add('active');
-        button.textContent = '显示答案';
-      }
-    });
+
     
     // 初始化
     document.addEventListener('DOMContentLoaded', () => {

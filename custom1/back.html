@@ -1,23 +1,12 @@
+{{FrontSide}}
 <div class="math-card">
-  {{FrontSide}}
-  
-  <hr class="divider">
   
   <div class="solution-section">
     
-    {{#KeyConcept}}
-    <div class="concept-box">
-      <div class="section-title">核心概念</div>
-      <div class="math-content">{{KeyConcept}}</div>
+    <div class="answer-box" style="font-weight: normal;">
+      <div class="section-title" style="margin: 4px 0;">最终答案</div>
+      <div class="math-content">{{Answer}}</div>
     </div>
-    {{/KeyConcept}}
-    
-    {{#Formula}}
-    <div class="formula-box">
-      <div class="section-title">关键公式</div>
-      <div class="math-content">{{Formula}}</div>
-    </div>
-    {{/Formula}}
     
     <!-- 修复步骤显示 -->
     <div class="steps-container">
@@ -25,14 +14,23 @@
       <div id="stepsContent"></div>
     </div>
     
-    <div class="answer-box">
-      <div class="section-title">最终答案</div>
-      <div class="math-content">{{Answer}}</div>
+    {{#KeyConcept}}
+    <div class="concept-box">
+      <div class="section-title" style="margin: 4px 0;">核心概念</div>
+      <div class="math-content">{{KeyConcept}}</div>
     </div>
+    {{/KeyConcept}}
+    
+    {{#Formula}}
+    <div class="formula-box">
+      <div class="section-title" style="margin: 4px 0;">关键公式</div>
+      <div class="math-content">{{Formula}}</div>
+    </div>
+    {{/Formula}}
     
     {{#CommonMistakes}}
     <div class="mistake-box">
-      <div class="section-title">易错警示</div>
+      <div class="section-title" style="margin: 4px 0;">易错警示</div>
       <ul class="mistake-list" id="mistakesList"></ul>
     </div>
     {{/CommonMistakes}}

@@ -75,7 +75,7 @@
 
 /* 小字体文本 */
 .small-text {
-  font-size: calc(var(--base-font-size) * 0.65);
+  font-size: calc(var(--base-font-size) * 0.75);
 }
 
 /* 难度标记 */
@@ -203,13 +203,13 @@
 
 /* 最终答案 */
 .answer-box {
-  margin: 15px 0;
-  padding: 12px;
+  margin: 8px 0;
+  padding: 8px;
   background-color: #e1f5fe;
   border-radius: 6px;
   border: 1px dashed #0288d1;
-  font-weight: bold;
-  font-size: calc(var(--base-font-size) * 1.05);
+  font-weight: normal;
+  font-size: var(--base-font-size);
 }
 
 /* 易错点 */
@@ -234,10 +234,12 @@
 
 /* 图片样式 */
 .question-content {
-  padding: 6px;
+  padding: 8px;
   background-color: #f9f9f9;
   border-radius: 6px;
-  margin-bottom: 8px;
+  margin: 8px 0;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .question-text {
