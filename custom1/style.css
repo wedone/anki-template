@@ -51,9 +51,10 @@
 .section-title {
   font-weight: bold;
   color: #2980b9;
-  margin: 8px 0 6px;
+  margin: 2px 0 2px;
   font-size: calc(var(--base-font-size) * 0.9);
   letter-spacing: 0.5px;
+  line-height: 1.2;
 }
 
 .divider {
@@ -287,8 +288,6 @@
 .settings-modal-content {
   background-color: white;
   border-radius: 10px;
-  width: 90%;
-  max-width: 400px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
   overflow: hidden;
 }
@@ -339,19 +338,28 @@
   margin: 8px 0;
 }
 
-.settings-modal-body button {
+.settings-modal-body button, .slider-btn {
   background-color: #3498db;
   color: white;
   border: none;
   border-radius: 5px;
-  padding: 8px 15px;
+  padding: 4px 12px;
   cursor: pointer;
-  font-size: calc(var(--base-font-size) * 0.9);
+  font-size: calc(var(--base-font-size) * 0.95);
   transition: background-color 0.2s;
 }
 
-.settings-modal-body button:hover {
+.settings-modal-body button:hover, .slider-btn:hover {
   background-color: #2980b9;
+}
+
+.settings-modal-body input[type='number'] {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 2px 4px;
+  font-size: calc(var(--base-font-size) * 0.95);
+  width: 48px;
+  text-align: center;
 }
 
 /* 移动端优化 */

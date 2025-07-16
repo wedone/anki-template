@@ -32,21 +32,21 @@
   
   <!-- 设置弹窗 -->
   <div id="settingsModal" class="settings-modal">
-    <div class="settings-modal-content">
-      <div class="settings-modal-header">
-        <h3>卡片设置</h3>
+    <div class="settings-modal-content" style="width:320px;max-width:90%;top:24px;position:absolute;left:50%;transform:translateX(-50%);">
+      <div class="settings-modal-header" style="padding-bottom:8px;">
+        <h3 style="font-size:18px;margin:0;">卡片设置</h3>
         <span class="close-button" onclick="toggleSettingsModal()">&times;</span>
       </div>
-      <div class="settings-modal-body">
-        <div class="setting">
-          <label>字体大小: <span id="fontSizeValue">16px</span></label>
-          <input type="range" min="12" max="24" value="16" id="fontSizeSlider">
+      <div class="settings-modal-body" style="padding:12px;">
+        <div class="setting" style="display:flex;align-items:center;gap:12px;">
+          <label style="white-space:nowrap;">字体大小: <span id="fontSizeValue">16px</span></label>
+          <input type="range" min="12" max="24" value="16" id="fontSizeSlider" style="flex:1;">
         </div>
-        <div class="setting">
-          <label>行间距: <span id="lineHeightValue">1.5</span></label>
-          <input type="range" min="13" max="20" value="15" id="lineHeightSlider">
+        <div class="setting" style="display:flex;align-items:center;gap:12px;">
+          <label style="white-space:nowrap;">行间距: <span id="lineHeightValue">1.5</span></label>
+          <input type="range" min="13" max="20" value="15" id="lineHeightSlider" style="flex:1;">
         </div>
-        <button onclick="applyDefaultSettings()">恢复默认</button>
+        <button onclick="applyDefaultSettings()" style="margin-top:8px;">恢复默认</button>
       </div>
     </div>
   </div>
@@ -77,6 +77,8 @@ window.frontSettings = {
   lineHeight: 1.5
 };
 
+
+
 function toggleSettingsModal() {
   const modal = document.getElementById('settingsModal');
   if (modal.classList.contains('show')) {
@@ -93,7 +95,6 @@ function toggleSettingsModal() {
 function updateSettings() {
   window.frontSettings.fontSize = parseInt(document.getElementById('fontSizeSlider').value);
   window.frontSettings.lineHeight = parseInt(document.getElementById('lineHeightSlider').value) / 10;
-  
   updateSettingsDisplay();
   applySettings();
 }
