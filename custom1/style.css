@@ -141,12 +141,10 @@
 }
 
 /* 核心概念和公式 */
-.concept-box, .formula-box {
+.concept-box, .formula-box, .mistake-box, .answer-box {
   margin: 8px 0;
   padding: 8px;
-  background-color: #e8f5e9;
   border-radius: 6px;
-  border: 1px dashed #4caf50;
   font-weight: normal;
   font-size: var(--base-font-size);
 }
@@ -207,24 +205,14 @@
 
 /* 最终答案 */
 .answer-box {
-  margin: 8px 0;
-  padding: 8px;
   background-color: #e1f5fe;
-  border-radius: 6px;
   border: 1px dashed #0288d1;
-  font-weight: normal;
-  font-size: var(--base-font-size);
 }
 
 /* 易错点 */
 .mistake-box {
-  margin: 8px 0;
-  padding: 8px;
   background-color: #ffebee;
-  border-radius: 6px;
   border: 1px dashed #f44336;
-  font-weight: normal;
-  font-size: var(--base-font-size);
 }
 
 .mistake-list {
