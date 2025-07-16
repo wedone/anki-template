@@ -1,5 +1,5 @@
 :root {
-  --card-padding: 8px;
+  --card-padding: 6px;
   --base-font-size: 16px;
   --line-height: 1.5;
 }
@@ -13,6 +13,7 @@
   margin: 0;
   width: 100%;
   box-sizing: border-box;
+  max-width: 100%;
 }
 
 /* 设置面板 */
@@ -50,8 +51,9 @@
 .section-title {
   font-weight: bold;
   color: #2980b9;
-  margin: 10px 0 8px;
-  font-size: calc(var(--base-font-size) * 1.05);
+  margin: 8px 0 6px;
+  font-size: calc(var(--base-font-size) * 0.9);
+  letter-spacing: 0.5px;
 }
 
 .divider {
@@ -61,23 +63,31 @@
   margin: 15px 0;
 }
 
-/* 卡片头部 */
-.card-header {
+/* 卡片底部 */
+.card-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 15px;
+  margin-top: 10px;
+  margin-bottom: 10px;
   position: relative;
+}
+
+/* 小字体文本 */
+.small-text {
+  font-size: calc(var(--base-font-size) * 0.65);
 }
 
 /* 难度标记 */
 .difficulty-badge {
   background: #f8f9fa;
   border: 1px solid #dee2e6;
-  border-radius: 8px;
-  padding: 3px 8px;
-  font-size: calc(var(--base-font-size) * 0.8);
+  border-radius: 4px;
+  padding: 1px 4px;
   z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 2px;
 }
 
 .difficulty-level {
@@ -87,24 +97,26 @@
 
 /* 设置按钮 */
 .settings-button {
-  background: #3498db;
-  color: white;
-  border-radius: 8px;
-  padding: 5px 10px;
-  font-size: calc(var(--base-font-size) * 0.8);
+  background: #f8f9fa;
+  color: #333;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  padding: 1px 4px;
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 2px;
   transition: background-color 0.2s;
 }
 
 .settings-button:hover {
-  background: #2980b9;
+  background: #e9ecef;
+  border-color: #ced4da;
 }
 
 .settings-icon {
-  font-size: calc(var(--base-font-size) * 1.1);
+  font-size: calc(var(--base-font-size) * 0.9);
+  color: #666;
 }
 
 /* 提示样式 */
@@ -158,24 +170,25 @@
 
 .step-header {
   background-color: #e3f2fd;
-  padding: 10px;
+  padding: 6px 8px;
   cursor: pointer;
   font-weight: 600;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  font-size: calc(var(--base-font-size) * 0.85);
 }
 
 .step-number {
   background: #3498db;
   color: white;
-  min-width: 26px;
-  height: 26px;
+  min-width: 22px;
+  height: 22px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: calc(var(--base-font-size) * 0.9);
+  font-size: calc(var(--base-font-size) * 0.8);
 }
 
 .toggle-icon {
@@ -220,9 +233,20 @@
 }
 
 /* 图片样式 */
+.question-content {
+  padding: 6px;
+  background-color: #f9f9f9;
+  border-radius: 6px;
+  margin-bottom: 8px;
+}
+
+.question-text {
+  font-size: calc(var(--base-font-size) * 1.05);
+}
+
 .question-image {
   text-align: center;
-  margin: 10px 0;
+  margin: 8px 0;
 }
 
 .question-image img {
@@ -234,9 +258,9 @@
 /* PC端优化 */
 @media (min-width: 769px) {
   .math-card {
-    max-width: 800px;
+    max-width: 95%;
     margin: 0 auto;
-    padding: 15px;
+    padding: 12px;
   }
 }
 
@@ -331,19 +355,29 @@
 /* 移动端优化 */
 @media (max-width: 768px) {
   :root {
-    --card-padding: 8px;
+    --card-padding: 4px;
+  }
+  
+  .math-card {
+    width: 100%;
+    max-width: 100%;
+    padding: 4px;
   }
   
   .step-header {
-    padding: 8px;
+    padding: 5px 6px;
   }
   
   .step-content {
-    padding: 8px;
+    padding: 6px;
   }
   
   .settings-modal-content {
-    width: 95%;
+    width: 98%;
     max-width: 350px;
+  }
+  
+  .question-content {
+    padding: 4px;
   }
 }

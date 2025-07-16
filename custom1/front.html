@@ -1,19 +1,4 @@
 <div class="math-card">
-  <div class="card-header">
-    {{#Difficulty}}
-    <div class="difficulty-badge">
-      难度: 
-      <span class="difficulty-level" id="difficultyDisplay">
-        {{Difficulty}}
-      </span>
-    </div>
-    {{/Difficulty}}
-    
-    <div class="settings-button" id="settingsButton" onclick="toggleSettingsModal()">
-      <span class="settings-icon">⚙️</span> 设置
-    </div>
-  </div>
-  
   <div class="question-content">
     {{#Image}}
     <div class="question-image">
@@ -22,6 +7,21 @@
     {{/Image}}
     
     <div class="question-text math-content">{{Question}}</div>
+  </div>
+  
+  <div class="card-footer">
+    {{#Difficulty}}
+    <div class="difficulty-badge small-text">
+      难度: 
+      <span class="difficulty-level" id="difficultyDisplay">
+        {{Difficulty}}
+      </span>
+    </div>
+    {{/Difficulty}}
+    
+    <div class="settings-button small-text" id="settingsButton" onclick="toggleSettingsModal()">
+      <span class="settings-icon">⚙️</span> 设置
+    </div>
   </div>
   
   {{#Hint}}
@@ -72,7 +72,7 @@ function updateDifficultyStars() {
 }
 
 // 设置功能
-const settings = {
+window.frontSettings = {
   fontSize: 16,
   lineHeight: 1.5
 };
@@ -84,33 +84,33 @@ function toggleSettingsModal() {
   } else {
     modal.classList.add('show');
     // 加载当前设置到滑块
-    document.getElementById('fontSizeSlider').value = settings.fontSize;
-    document.getElementById('lineHeightSlider').value = settings.lineHeight * 10;
+    document.getElementById('fontSizeSlider').value = window.frontSettings.fontSize;
+    document.getElementById('lineHeightSlider').value = window.frontSettings.lineHeight * 10;
     updateSettingsDisplay();
   }
 }
 
 function updateSettings() {
-  settings.fontSize = parseInt(document.getElementById('fontSizeSlider').value);
-  settings.lineHeight = parseInt(document.getElementById('lineHeightSlider').value) / 10;
+  window.frontSettings.fontSize = parseInt(document.getElementById('fontSizeSlider').value);
+  window.frontSettings.lineHeight = parseInt(document.getElementById('lineHeightSlider').value) / 10;
   
   updateSettingsDisplay();
   applySettings();
 }
 
 function updateSettingsDisplay() {
-  document.getElementById('fontSizeValue').textContent = settings.fontSize + 'px';
-  document.getElementById('lineHeightValue').textContent = settings.lineHeight;
+  document.getElementById('fontSizeValue').textContent = window.frontSettings.fontSize + 'px';
+  document.getElementById('lineHeightValue').textContent = window.frontSettings.lineHeight;
 }
 
 function applySettings() {
-  document.documentElement.style.setProperty('--base-font-size', `${settings.fontSize}px`);
-  document.documentElement.style.setProperty('--line-height', settings.lineHeight);
+  document.documentElement.style.setProperty('--base-font-size', `${window.frontSettings.fontSize}px`);
+  document.documentElement.style.setProperty('--line-height', window.frontSettings.lineHeight);
 }
 
 function applyDefaultSettings() {
-  settings.fontSize = 16;
-  settings.lineHeight = 1.5;
+  window.frontSettings.fontSize = 16;
+  window.frontSettings.lineHeight = 1.5;
   document.getElementById('fontSizeSlider').value = 16;
   document.getElementById('lineHeightSlider').value = 15;
   updateSettings();

@@ -30,12 +30,22 @@
       overflow: hidden;
       width: 100%;
     }
-    
+  /* 卡片头部 */
     .card-header {
       background-color: #3498db;
       color: white;
       padding: 10px 15px;
       font-weight: bold;
+    }
+    
+    /* 卡片底部 */
+    .card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 10px;
+      margin-bottom: 10px;
+      position: relative;
     }
     
     .card-content {
@@ -92,7 +102,7 @@
   <style>
     /* 从style.css复制的样式 */
     :root {
-      --card-padding: 8px;
+      --card-padding: 6px;
       --base-font-size: 16px;
       --line-height: 1.5;
     }
@@ -106,6 +116,7 @@
       margin: 0;
       width: 100%;
       box-sizing: border-box;
+      max-width: 100%;
     }
 
     /* 设置面板 */
@@ -115,6 +126,18 @@
       border-radius: 8px;
       padding: 15px;
       margin-bottom: 20px;
+    }
+    
+    .settings-button {
+      background: #3498db;
+      color: white;
+      border-radius: 4px;
+      padding: 1px 4px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      transition: background-color 0.2s;
     }
 
     .settings-panel h3 {
@@ -143,8 +166,9 @@
     .section-title {
       font-weight: bold;
       color: #2980b9;
-      margin: 10px 0 8px;
-      font-size: calc(var(--base-font-size) * 1.05);
+      margin: 8px 0 6px;
+      font-size: calc(var(--base-font-size) * 0.9);
+      letter-spacing: 0.5px;
     }
 
     .divider {
@@ -154,16 +178,17 @@
       margin: 15px 0;
     }
 
+    /* 小字体文本 */
+    .small-text {
+      font-size: 0.65rem;
+    }
+    
     /* 难度标记 */
     .difficulty-badge {
-      position: absolute;
-      top: var(--card-padding);
-      left: var(--card-padding);
       background: #f8f9fa;
       border: 1px solid #dee2e6;
-      border-radius: 8px;
-      padding: 3px 8px;
-      font-size: calc(var(--base-font-size) * 0.8);
+      border-radius: 4px;
+      padding: 1px 4px;
       z-index: 5;
     }
 
@@ -223,24 +248,25 @@
 
     .step-header {
       background-color: #e3f2fd;
-      padding: 10px;
+      padding: 6px 8px;
       cursor: pointer;
       font-weight: 600;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      font-size: calc(var(--base-font-size) * 0.85);
     }
 
     .step-number {
       background: #3498db;
       color: white;
-      min-width: 26px;
-      height: 26px;
+      min-width: 22px;
+      height: 22px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: calc(var(--base-font-size) * 0.9);
+      font-size: calc(var(--base-font-size) * 0.8);
     }
 
     .toggle-icon {
@@ -285,9 +311,20 @@
     }
 
     /* 图片样式 */
+    .question-content {
+      padding: 6px;
+      background-color: #f9f9f9;
+      border-radius: 6px;
+      margin-bottom: 8px;
+    }
+
+    .question-text {
+      font-size: calc(var(--base-font-size) * 1.05);
+    }
+
     .question-image {
       text-align: center;
-      margin: 10px 0;
+      margin: 8px 0;
     }
 
     .question-image img {
@@ -299,24 +336,34 @@
     /* PC端优化 */
     @media (min-width: 769px) {
       .math-card {
-        max-width: 800px;
+        max-width: 95%;
         margin: 0 auto;
-        padding: 15px;
+        padding: 12px;
       }
     }
 
     /* 移动端优化 */
     @media (max-width: 768px) {
       :root {
-        --card-padding: 8px;
+        --card-padding: 4px;
+      }
+      
+      .math-card {
+        width: 100%;
+        max-width: 100%;
+        padding: 4px;
       }
       
       .step-header {
-        padding: 8px;
+        padding: 5px 6px;
       }
       
       .step-content {
-        padding: 8px;
+        padding: 6px;
+      }
+      
+      .question-content {
+        padding: 4px;
       }
     }
   </style>
@@ -338,25 +385,25 @@
         <div id="frontTab" class="tab-content active">
           <!-- 正面模板内容 -->
           <div class="math-card">
-            <div class="card-header">
-              <div class="difficulty-badge">
-                难度: 
-                <span class="difficulty-level" id="difficultyDisplay">
-                  3
-                </span>
-              </div>
-              
-              <div class="settings-button" id="settingsButton" onclick="toggleSettingsModal()">
-                <span class="settings-icon">⚙️</span> 设置
-              </div>
-            </div>
-            
             <div class="question-content">
               <div class="question-image">
                 <img src="https://via.placeholder.com/400x200?text=数学图表" alt="数学图表">
               </div>
               
               <div class="question-text math-content">求函数 $f(x) = 2x^3 - 3x^2 + 4x - 5$ 在区间 $[1, 2]$ 上的最大值和最小值。</div>
+            </div>
+            
+            <div class="card-footer">
+              <div class="difficulty-badge small-text">
+                难度: 
+                <span class="difficulty-level" id="difficultyDisplay">
+                  3
+                </span>
+              </div>
+              
+              <div class="settings-button small-text" id="settingsButton" onclick="toggleSettingsModal()">
+                <span class="settings-icon">⚙️</span> 设置
+              </div>
             </div>
             
             <div class="hint" onclick="this.classList.toggle('revealed')">
@@ -390,11 +437,17 @@
           <!-- 背面模板内容 -->
           <div class="math-card">
             <!-- 前面内容 -->
-            <div class="difficulty-badge">
-              难度: 
-              <span class="difficulty-level">
-                ★★★☆☆
-              </span>
+            <div class="card-footer">
+              <div class="difficulty-badge small-text">
+                难度: 
+                <span class="difficulty-level">
+                  ★★★☆☆
+                </span>
+              </div>
+              
+              <div class="settings-button small-text" id="settingsButton" onclick="toggleSettingsModal()">
+                <span class="settings-icon">⚙️</span> 设置
+              </div>
             </div>
             
             <div class="question-content">
@@ -412,19 +465,6 @@
             <hr class="divider">
             
             <div class="solution-section">
-              <!-- 设置面板 -->
-              <div class="settings-panel">
-                <h3>卡片设置</h3>
-                <div class="setting">
-                  <label>字体大小: <span id="fontSizeValue">16px</span></label>
-                  <input type="range" min="12" max="24" value="16" id="fontSizeSlider">
-                </div>
-                <div class="setting">
-                  <label>行间距: <span id="lineHeightValue">1.5</span></label>
-                  <input type="range" min="13" max="20" value="15" id="lineHeightSlider">
-                </div>
-                <button onclick="applyDefaultSettings()">恢复默认</button>
-              </div>
               
               <div class="concept-box">
                 <div class="section-title">核心概念</div>
@@ -540,7 +580,7 @@ $f(2) = 2(2)^3 - 3(2)^2 + 4(2) - 5 = 16 - 12 + 8 - 5 = 7$</div>
     }
     
     // 设置功能
-    const settings = {
+    window.frontSettings = {
       fontSize: 16,
       lineHeight: 1.5
     };
@@ -552,33 +592,33 @@ $f(2) = 2(2)^3 - 3(2)^2 + 4(2) - 5 = 16 - 12 + 8 - 5 = 7$</div>
       } else {
         modal.classList.add('show');
         // 加载当前设置到滑块
-        document.getElementById('fontSizeSlider').value = settings.fontSize;
-        document.getElementById('lineHeightSlider').value = settings.lineHeight * 10;
+        document.getElementById('fontSizeSlider').value = window.frontSettings.fontSize;
+        document.getElementById('lineHeightSlider').value = window.frontSettings.lineHeight * 10;
         updateSettingsDisplay();
       }
     }
 
     function updateSettings() {
-      settings.fontSize = parseInt(document.getElementById('fontSizeSlider').value);
-      settings.lineHeight = parseInt(document.getElementById('lineHeightSlider').value) / 10;
+      window.frontSettings.fontSize = parseInt(document.getElementById('fontSizeSlider').value);
+      window.frontSettings.lineHeight = parseInt(document.getElementById('lineHeightSlider').value) / 10;
       
       updateSettingsDisplay();
       applySettings();
     }
     
     function updateSettingsDisplay() {
-      document.getElementById('fontSizeValue').textContent = settings.fontSize + 'px';
-      document.getElementById('lineHeightValue').textContent = settings.lineHeight;
+      document.getElementById('fontSizeValue').textContent = window.frontSettings.fontSize + 'px';
+      document.getElementById('lineHeightValue').textContent = window.frontSettings.lineHeight;
     }
 
     function applySettings() {
-      document.documentElement.style.setProperty('--base-font-size', `${settings.fontSize}px`);
-      document.documentElement.style.setProperty('--line-height', settings.lineHeight);
+      document.documentElement.style.setProperty('--base-font-size', `${window.frontSettings.fontSize}px`);
+      document.documentElement.style.setProperty('--line-height', window.frontSettings.lineHeight);
     }
 
     function applyDefaultSettings() {
-      settings.fontSize = 16;
-      settings.lineHeight = 1.5;
+      window.frontSettings.fontSize = 16;
+      window.frontSettings.lineHeight = 1.5;
       document.getElementById('fontSizeSlider').value = 16;
       document.getElementById('lineHeightSlider').value = 15;
       updateSettings();

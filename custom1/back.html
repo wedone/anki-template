@@ -4,19 +4,6 @@
   <hr class="divider">
   
   <div class="solution-section">
-    <!-- 设置面板 -->
-    <div class="settings-panel">
-      <h3>卡片设置</h3>
-      <div class="setting">
-        <label>字体大小: <span id="fontSizeValue">16px</span></label>
-        <input type="range" min="12" max="24" value="16" id="fontSizeSlider">
-      </div>
-      <div class="setting">
-        <label>行间距: <span id="lineHeightValue">1.5</span></label>
-        <input type="range" min="13" max="20" value="15" id="lineHeightSlider">
-      </div>
-      <button onclick="applyDefaultSettings()">恢复默认</button>
-    </div>
     
     {{#KeyConcept}}
     <div class="concept-box">
@@ -114,33 +101,12 @@ function toggleStep(header) {
   }
 }
 
-// 设置功能
-const settings = {
-  fontSize: 16,
-  lineHeight: 1.5
-};
-
-function updateSettings() {
-  settings.fontSize = parseInt(document.getElementById('fontSizeSlider').value);
-  settings.lineHeight = parseInt(document.getElementById('lineHeightSlider').value) / 10;
-  
-  document.getElementById('fontSizeValue').textContent = settings.fontSize + 'px';
-  document.getElementById('lineHeightValue').textContent = settings.lineHeight;
-  
-  applySettings();
-}
-
+// 应用设置函数
 function applySettings() {
-  document.documentElement.style.setProperty('--base-font-size', `${settings.fontSize}px`);
-  document.documentElement.style.setProperty('--line-height', settings.lineHeight);
-}
-
-function applyDefaultSettings() {
-  settings.fontSize = 16;
-  settings.lineHeight = 1.5;
-  document.getElementById('fontSizeSlider').value = 16;
-  document.getElementById('lineHeightSlider').value = 15;
-  updateSettings();
+  // 从前面模板获取设置
+  const frontSettings = window.frontSettings || { fontSize: 16, lineHeight: 1.5 };
+  document.documentElement.style.setProperty('--base-font-size', `${frontSettings.fontSize}px`);
+  document.documentElement.style.setProperty('--line-height', frontSettings.lineHeight);
 }
 
 // 初始化函数
@@ -148,10 +114,6 @@ function initBack() {
   // 处理内容
   processSteps();
   processMistakes();
-  
-  // 初始化设置
-  document.getElementById('fontSizeSlider').addEventListener('input', updateSettings);
-  document.getElementById('lineHeightSlider').addEventListener('input', updateSettings);
   
   // 折叠所有步骤
   document.querySelectorAll('.step-content').forEach(content => {
