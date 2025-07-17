@@ -2,6 +2,21 @@
   --card-padding: 6px;
   --base-font-size: 16px;
   --line-height: 1.5;
+  --answer-bg: #e1f5fe;
+  --answer-border: #0288d1;
+  --question-bg: #f9f9f9;
+}
+
+.front-card {
+  --answer-bg: #f9f9f9;
+  --answer-border: #e1f5fe;
+  --question-bg: #f9f9f9;
+}
+
+.back-card {
+  --answer-bg: #e1f5fe;
+  --answer-border: #0288d1;
+  --question-bg: #f9f9f9;
 }
 
 .math-card {
@@ -154,8 +169,8 @@
 
 /* 最终答案 */
 .answer-box {
-  background-color: #e1f5fe;
-  border: 1px dashed #0288d1;
+  background-color: var(--answer-bg);
+  border: 1px dashed var(--answer-border);
 }
 
 /* 易错点 */
@@ -177,7 +192,7 @@
 /* 图片样式 */
 .question-content {
   padding: 8px;
-  background-color: #f9f9f9;
+  background-color: var(--question-bg);
   border-radius: 6px;
   margin: 8px 0;
   width: 100%;
