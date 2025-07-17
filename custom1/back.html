@@ -5,11 +5,11 @@
     
     <div class="answer-box" style="font-weight: normal;">
       <div class="section-title" style="margin: 4px 0;">最终答案</div>
-      <div class="math-content">{{Answer}}</div>
+      <div class="math-content" id="answerContent">{{Answer}}</div>
     </div>
     
     <!-- 修复步骤显示 -->
-    <div class="steps-container">
+    <div class="steps-container" id="stepsContainer">
       <div class="section-title">解题步骤</div>
       <div id="stepsContent"></div>
     </div>
@@ -38,13 +38,45 @@
 </div>
 
 <script>
+// 检查字段是否为空的函数
+function isEmptyField(fieldContent) {
+  return !fieldContent || fieldContent.trim() === '';
+}
+
+// 答案处理函数
+function processAnswer() {
+  const answerContent = document.getElementById('answerContent');
+  const answerBox = answerContent?.closest('.answer-box');
+  
+  if (!answerContent || !answerBox) return;
+  
+  const answerData = "{{Answer}}";
+  
+  // 如果答案为空，隐藏整个答案容器
+  if (isEmptyField(answerData)) {
+    answerBox.style.display = 'none';
+  } else {
+    answerBox.style.display = 'block';
+  }
+}
+
 // 步骤处理函数
 function processSteps() {
   const stepsContent = document.getElementById('stepsContent');
-  if (!stepsContent) return;
+  const stepsContainer = document.getElementById('stepsContainer');
+  
+  if (!stepsContent || !stepsContainer) return;
   
   const stepsData = "{{Steps}}";
-  if (!stepsData) return;
+  
+  // 如果步骤为空，隐藏整个步骤容器
+  if (isEmptyField(stepsData)) {
+    stepsContainer.style.display = 'none';
+    return;
+  }
+  
+  // 显示步骤容器
+  stepsContainer.style.display = 'block';
   
   const steps = stepsData.split("||");
   stepsContent.innerHTML = '';
@@ -68,10 +100,20 @@ function processSteps() {
 // 易错点处理
 function processMistakes() {
   const mistakesList = document.getElementById('mistakesList');
-  if (!mistakesList) return;
+  const mistakeBox = mistakesList?.closest('.mistake-box');
+  
+  if (!mistakesList || !mistakeBox) return;
   
   const mistakesData = "{{CommonMistakes}}";
-  if (!mistakesData) return;
+  
+  // 如果易错点为空，隐藏整个易错点容器
+  if (isEmptyField(mistakesData)) {
+    mistakeBox.style.display = 'none';
+    return;
+  }
+  
+  // 显示易错点容器
+  mistakeBox.style.display = 'block';
   
   const mistakes = mistakesData.split("|");
   mistakesList.innerHTML = '';
@@ -128,6 +170,7 @@ function applySettings() {
 // 初始化函数
 function initBack() {
   // 处理内容
+  processAnswer();
   processSteps();
   processMistakes();
   
