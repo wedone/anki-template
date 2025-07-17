@@ -16,37 +16,6 @@
   max-width: 100%;
 }
 
-/* 设置面板 */
-.settings-panel {
-  background: #f8f9fa;
-  border: 1px solid #dee2e6;
-  border-radius: 8px;
-  padding: 15px;
-  margin-bottom: 20px;
-}
-
-.settings-panel h3 {
-  margin-top: 0;
-  margin-bottom: 15px;
-  color: #2c3e50;
-  border-bottom: 1px solid #3498db;
-  padding-bottom: 8px;
-}
-
-.setting {
-  margin-bottom: 15px;
-}
-
-.setting label {
-  display: block;
-  margin-bottom: 8px;
-  font-weight: 500;
-}
-
-.setting input[type="range"] {
-  width: 100%;
-}
-
 /* 内容区域 */
 .section-title {
   font-weight: bold;
@@ -55,13 +24,6 @@
   font-size: calc(var(--base-font-size) * 0.9);
   letter-spacing: 0.5px;
   line-height: 1.2;
-}
-
-.divider {
-  border: 0;
-  height: 1px;
-  background: #3498db;
-  margin: 15px 0;
 }
 
 /* 卡片底部 */
@@ -184,37 +146,6 @@
   margin: 8px 0 4px 0;
 }
 
-.step-header {
-  background: none;
-  padding: 0 0 0 0;
-  border: none;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  font-size: calc(var(--base-font-size) * 0.95);
-  gap: 8px;
-  cursor: pointer;
-}
-
-.step-number {
-  background: #3498db;
-  color: white;
-  min-width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(var(--base-font-size) * 0.85);
-  margin-right: 8px;
-}
-
-.toggle-icon {
-  font-size: calc(var(--base-font-size) * 0.9);
-  margin-left: 6px;
-}
-
 .step-content {
   background: none;
   padding: 2px 0 2px 0;
@@ -289,7 +220,6 @@
   z-index: 1000;
   justify-content: center;
   align-items: center;
-  /* 固定字体，不受卡片设置影响 */
   font-family: "Segoe UI", "Noto Sans", system-ui, sans-serif !important;
   font-size: 14px !important;
   line-height: 1.4 !important;
@@ -304,7 +234,6 @@
   border-radius: 10px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
   overflow: hidden;
-  /* 固定字体，不受卡片设置影响 */
   font-family: "Segoe UI", "Noto Sans", system-ui, sans-serif !important;
   font-size: 14px !important;
   line-height: 1.4 !important;
@@ -317,7 +246,6 @@
   padding: 15px;
   background-color: #f8f9fa;
   border-bottom: 1px solid #dee2e6;
-  /* 固定字体，不受卡片设置影响 */
   font-family: "Segoe UI", "Noto Sans", system-ui, sans-serif !important;
   font-size: 14px !important;
   line-height: 1.4 !important;
@@ -327,7 +255,6 @@
   margin: 0;
   font-size: 18px !important;
   color: #333;
-  /* 固定字体，不受卡片设置影响 */
   font-family: "Segoe UI", "Noto Sans", system-ui, sans-serif !important;
   line-height: 1.4 !important;
 }
@@ -337,7 +264,6 @@
   font-weight: bold;
   cursor: pointer;
   color: #666;
-  /* 固定字体，不受卡片设置影响 */
   font-family: "Segoe UI", "Noto Sans", system-ui, sans-serif !important;
 }
 
@@ -347,7 +273,6 @@
 
 .settings-modal-body {
   padding: 15px;
-  /* 固定字体，不受卡片设置影响 */
   font-family: "Segoe UI", "Noto Sans", system-ui, sans-serif !important;
   font-size: 14px !important;
   line-height: 1.4 !important;
@@ -355,7 +280,6 @@
 
 .setting {
   margin-bottom: 15px;
-  /* 固定字体，不受卡片设置影响 */
   font-family: "Segoe UI", "Noto Sans", system-ui, sans-serif !important;
   font-size: 14px !important;
   line-height: 1.4 !important;
@@ -366,7 +290,6 @@
   margin-bottom: 5px;
   font-weight: bold;
   color: #555;
-  /* 固定字体，不受卡片设置影响 */
   font-family: "Segoe UI", "Noto Sans", system-ui, sans-serif !important;
   font-size: 14px !important;
   line-height: 1.4 !important;
@@ -377,7 +300,7 @@
   margin: 8px 0;
 }
 
-.settings-modal-body button, .slider-btn {
+.settings-modal-body button {
   background-color: #3498db;
   color: white;
   border: none;
@@ -386,12 +309,11 @@
   cursor: pointer;
   font-size: 14px !important;
   transition: background-color 0.2s;
-  /* 固定字体，不受卡片设置影响 */
   font-family: "Segoe UI", "Noto Sans", system-ui, sans-serif !important;
   line-height: 1.4 !important;
 }
 
-.settings-modal-body button:hover, .slider-btn:hover {
+.settings-modal-body button:hover {
   background-color: #2980b9;
 }
 
@@ -402,7 +324,6 @@
   font-size: 14px !important;
   width: 48px;
   text-align: center;
-  /* 固定字体，不受卡片设置影响 */
   font-family: "Segoe UI", "Noto Sans", system-ui, sans-serif !important;
   line-height: 1.4 !important;
 }
@@ -417,10 +338,6 @@
     width: 100%;
     max-width: 100%;
     padding: 4px;
-  }
-  
-  .step-header {
-    padding: 5px 6px;
   }
   
   .step-content {

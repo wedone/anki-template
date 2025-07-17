@@ -42,26 +42,19 @@
 // 步骤处理函数 - 直接显示所有步骤
 function processSteps() {
   const stepsContent = document.getElementById('stepsContent');
-  if (!stepsContent) return;
+  if (!stepsContent) return; // 只需判断元素是否存在即可
   
-  const stepsData = "{{Steps}}";
-  if (!stepsData) return;
-  
-  const steps = stepsData.split("||");
+  const steps = "{{Steps}}".split("||");
   stepsContent.innerHTML = '';
-  
-  steps.forEach((step, index) => {
-
+  steps.forEach((step) => {
     const stepElement = document.createElement('div');
     stepElement.className = 'step';
     stepElement.innerHTML = `
-
       <div class="step-content" style="display: block;">
         <div class="math-content">${step}</div>
       </div>
     `;
     stepsContent.appendChild(stepElement);
-
   });
 }
 
