@@ -79,7 +79,32 @@ window.frontSettings = {
   lineHeight: 1.5
 };
 
+// 保存设置到localStorage
+function saveSettings() {
+  try {
+    localStorage.setItem('ankiCardSettings', JSON.stringify(window.frontSettings));
+  } catch (e) {
+    console.warn('无法保存设置到localStorage:', e);
+  }
+}
 
+// 从localStorage加载设置
+function loadSettings() {
+  try {
+    const savedSettings = localStorage.getItem('ankiCardSettings');
+    if (savedSettings) {
+      const parsed = JSON.parse(savedSettings);
+      window.frontSettings = {
+        fontSize: parsed.fontSize || 16,
+        lineHeight: parsed.lineHeight || 1.5
+      };
+      return true;
+    }
+  } catch (e) {
+    console.warn('无法从localStorage加载设置:', e);
+  }
+  return false;
+}
 
 function toggleSettingsModal() {
   const modal = document.getElementById('settingsModal');
@@ -97,8 +122,11 @@ function toggleSettingsModal() {
 function updateSettings() {
   window.frontSettings.fontSize = parseInt(document.getElementById('fontSizeSlider').value);
   window.frontSettings.lineHeight = parseInt(document.getElementById('lineHeightSlider').value) / 10;
+  
   updateSettingsDisplay();
   applySettings();
+  // 保存设置
+  saveSettings();
 }
 
 function updateSettingsDisplay() {
@@ -117,10 +145,15 @@ function applyDefaultSettings() {
   document.getElementById('fontSizeSlider').value = 16;
   document.getElementById('lineHeightSlider').value = 15;
   updateSettings();
+  // 保存默认设置
+  saveSettings();
 }
 
 // 初始化函数
 function initFront() {
+  // 加载保存的设置
+  loadSettings();
+  
   // 更新难度显示
   updateDifficultyStars();
   

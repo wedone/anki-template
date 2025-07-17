@@ -101,8 +101,26 @@ function toggleStep(header) {
 
 // 应用设置函数
 function applySettings() {
-  // 从前面模板获取设置
-  const frontSettings = window.frontSettings || { fontSize: 16, lineHeight: 1.5 };
+  // 从localStorage加载设置
+  let frontSettings = window.frontSettings;
+  if (!frontSettings) {
+    try {
+      const savedSettings = localStorage.getItem('ankiCardSettings');
+      if (savedSettings) {
+        const parsed = JSON.parse(savedSettings);
+        frontSettings = {
+          fontSize: parsed.fontSize || 16,
+          lineHeight: parsed.lineHeight || 1.5,
+        };
+      } else {
+        frontSettings = { fontSize: 16, lineHeight: 1.5 };
+      }
+    } catch (e) {
+      console.warn('无法从localStorage加载设置:', e);
+      frontSettings = { fontSize: 16, lineHeight: 1.5 };
+    }
+  }
+  
   document.documentElement.style.setProperty('--base-font-size', `${frontSettings.fontSize}px`);
   document.documentElement.style.setProperty('--line-height', frontSettings.lineHeight);
 }

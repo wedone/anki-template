@@ -116,7 +116,7 @@
 }
 
 .settings-icon {
-  font-size: calc(var(--base-font-size) * 0.9);
+  font-size: calc(var(--base-font-size) * 0.75);
   color: #666;
 }
 
@@ -271,6 +271,10 @@
   z-index: 1000;
   justify-content: center;
   align-items: center;
+  /* 固定字体，不受卡片设置影响 */
+  font-family: "Segoe UI", "Noto Sans", system-ui, sans-serif !important;
+  font-size: 14px !important;
+  line-height: 1.4 !important;
 }
 
 .settings-modal.show {
@@ -282,6 +286,10 @@
   border-radius: 10px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
   overflow: hidden;
+  /* 固定字体，不受卡片设置影响 */
+  font-family: "Segoe UI", "Noto Sans", system-ui, sans-serif !important;
+  font-size: 14px !important;
+  line-height: 1.4 !important;
 }
 
 .settings-modal-header {
@@ -291,12 +299,19 @@
   padding: 15px;
   background-color: #f8f9fa;
   border-bottom: 1px solid #dee2e6;
+  /* 固定字体，不受卡片设置影响 */
+  font-family: "Segoe UI", "Noto Sans", system-ui, sans-serif !important;
+  font-size: 14px !important;
+  line-height: 1.4 !important;
 }
 
 .settings-modal-header h3 {
   margin: 0;
-  font-size: calc(var(--base-font-size) * 1.1);
+  font-size: 18px !important;
   color: #333;
+  /* 固定字体，不受卡片设置影响 */
+  font-family: "Segoe UI", "Noto Sans", system-ui, sans-serif !important;
+  line-height: 1.4 !important;
 }
 
 .close-button {
@@ -304,6 +319,8 @@
   font-weight: bold;
   cursor: pointer;
   color: #666;
+  /* 固定字体，不受卡片设置影响 */
+  font-family: "Segoe UI", "Noto Sans", system-ui, sans-serif !important;
 }
 
 .close-button:hover {
@@ -312,10 +329,18 @@
 
 .settings-modal-body {
   padding: 15px;
+  /* 固定字体，不受卡片设置影响 */
+  font-family: "Segoe UI", "Noto Sans", system-ui, sans-serif !important;
+  font-size: 14px !important;
+  line-height: 1.4 !important;
 }
 
 .setting {
   margin-bottom: 15px;
+  /* 固定字体，不受卡片设置影响 */
+  font-family: "Segoe UI", "Noto Sans", system-ui, sans-serif !important;
+  font-size: 14px !important;
+  line-height: 1.4 !important;
 }
 
 .setting label {
@@ -323,6 +348,10 @@
   margin-bottom: 5px;
   font-weight: bold;
   color: #555;
+  /* 固定字体，不受卡片设置影响 */
+  font-family: "Segoe UI", "Noto Sans", system-ui, sans-serif !important;
+  font-size: 14px !important;
+  line-height: 1.4 !important;
 }
 
 .setting input[type="range"] {
@@ -337,8 +366,11 @@
   border-radius: 5px;
   padding: 4px 12px;
   cursor: pointer;
-  font-size: calc(var(--base-font-size) * 0.95);
+  font-size: 14px !important;
   transition: background-color 0.2s;
+  /* 固定字体，不受卡片设置影响 */
+  font-family: "Segoe UI", "Noto Sans", system-ui, sans-serif !important;
+  line-height: 1.4 !important;
 }
 
 .settings-modal-body button:hover, .slider-btn:hover {
@@ -349,9 +381,12 @@
   border: 1px solid #ccc;
   border-radius: 4px;
   padding: 2px 4px;
-  font-size: calc(var(--base-font-size) * 0.95);
+  font-size: 14px !important;
   width: 48px;
   text-align: center;
+  /* 固定字体，不受卡片设置影响 */
+  font-family: "Segoe UI", "Noto Sans", system-ui, sans-serif !important;
+  line-height: 1.4 !important;
 }
 
 /* 移动端优化 */
