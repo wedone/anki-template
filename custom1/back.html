@@ -1,54 +1,41 @@
 {{FrontSide}}
 <div class="math-card">
   
-  <div class="solution-section">
-    
-    <div class="answer-box" style="font-weight: normal;">
-      <div class="section-title" style="margin: 4px 0;">最终答案</div>
-      <div class="math-content">{{Answer}}</div>
-    </div>
-    
-    <!-- 直接显示所有步骤 -->
-    <div class="steps-container">
-      <div class="section-title">解题步骤</div>
-      <div id="stepsContent"></div>
-    </div>
-    
-    {{#KeyConcept}}
-    <div class="concept-box">
-      <div class="section-title" style="margin: 4px 0;">核心概念</div>
-      <div class="math-content">{{KeyConcept}}</div>
-    </div>
-    {{/KeyConcept}}
-    
-    {{#Formula}}
-    <div class="formula-box">
-      <div class="section-title" style="margin: 4px 0;">关键公式</div>
-      <div class="math-content">{{Formula}}</div>
-    </div>
-    {{/Formula}}
-    
-    {{#CommonMistakes}}
-    <div class="mistake-box">
-      <div class="section-title" style="margin: 4px 0;">易错警示</div>
-      <ul class="mistake-list" id="mistakesList"></ul>
-    </div>
-    {{/CommonMistakes}}
+  {{#Answer}}
+  <div class="answer-box" style="font-weight: normal;">
+    <div class="section-title" style="margin: 4px 0;">最终答案</div>
+    <div class="math-content">{{Answer}}</div>
   </div>
+  {{/Answer}}
+  
+  {{#Steps}}
+  <div class="steps-container">
+    <div class="section-title">解题步骤</div>
+    <div id="stepsContent"></div>
+  </div>
+  {{/Steps}}
+  
+  {{#KeyConcept}}
+  <div class="concept-box">
+    <div class="section-title" style="margin: 4px 0;">核心概念</div>
+    <div class="math-content">{{KeyConcept}}</div>
+  </div>
+  {{/KeyConcept}}
+  
+  {{#Formula}}
+  <div class="formula-box">
+    <div class="section-title" style="margin: 4px 0;">关键公式</div>
+    <div class="math-content">{{Formula}}</div>
+  </div>
+  {{/Formula}}
+  
+  {{#CommonMistakes}}
+  <div class="mistake-box">
+    <div class="section-title" style="margin: 4px 0;">易错警示</div>
+    <ul class="mistake-list" id="mistakesList"></ul>
+  </div>
+  {{/CommonMistakes}}
 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 <script>
