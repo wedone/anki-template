@@ -85,9 +85,7 @@ function processSteps() {
     const stepElement = document.createElement('div');
     stepElement.className = 'step';
     stepElement.innerHTML = `
-      <div class="step-header" onclick="toggleStep(this)">
-        <span class="step-number">${index + 1}</span>
-        <span class="toggle-icon">▼</span>
+      <div class="step-header">
       </div>
       <div class="step-content">
         <div class="math-content">${step}</div>
@@ -127,20 +125,6 @@ function processMistakes() {
   });
 }
 
-// 步骤折叠功能
-function toggleStep(header) {
-  const content = header.nextElementSibling;
-  const icon = header.querySelector('.toggle-icon');
-  
-  if (content.style.display === 'none' || !content.style.display) {
-    content.style.display = 'block';
-    icon.textContent = '▲';
-  } else {
-    content.style.display = 'none';
-    icon.textContent = '▼';
-  }
-}
-
 // 应用设置函数
 function applySettings() {
   // 从localStorage加载设置
@@ -173,11 +157,6 @@ function initBack() {
   processAnswer();
   processSteps();
   processMistakes();
-  
-  // 折叠所有步骤
-  document.querySelectorAll('.step-content').forEach(content => {
-    content.style.display = 'none';
-  });
   
   // 应用设置
   applySettings();

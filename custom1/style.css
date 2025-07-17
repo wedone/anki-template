@@ -162,23 +162,39 @@
 /* 解题步骤 */
 .steps-container {
   margin: 15px 0;
+  background-color: #e3f2fd;
+  border: 1px dashed #0288d1;
+  border-radius: 6px;
+  padding: 10px 12px 6px 12px;
 }
 
 .step {
-  margin-bottom: 10px;
-  border-radius: 5px;
-  overflow: hidden;
+  margin-bottom: 0;
+  border-radius: 0;
+  background: none;
+  border: none;
+  padding: 0;
+  position: relative;
+}
+
+.step:not(:last-child)::after {
+  content: "";
+  display: block;
+  border-bottom: 1px dashed #b3e0fc;
+  margin: 8px 0 4px 0;
 }
 
 .step-header {
-  background-color: #e3f2fd;
-  padding: 6px 8px;
-  cursor: pointer;
+  background: none;
+  padding: 0 0 0 0;
+  border: none;
   font-weight: 600;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  font-size: calc(var(--base-font-size) * 0.85);
+  justify-content: flex-start;
+  font-size: calc(var(--base-font-size) * 0.95);
+  gap: 8px;
+  cursor: pointer;
 }
 
 .step-number {
@@ -190,17 +206,19 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: calc(var(--base-font-size) * 0.8);
+  font-size: calc(var(--base-font-size) * 0.85);
+  margin-right: 8px;
 }
 
 .toggle-icon {
   font-size: calc(var(--base-font-size) * 0.9);
+  margin-left: 6px;
 }
 
 .step-content {
-  background-color: #f8fdff;
-  padding: 10px;
-  display: none;
+  background: none;
+  padding: 2px 0 2px 0;
+  display: block;
 }
 
 /* 最终答案 */
@@ -406,7 +424,7 @@
   }
   
   .step-content {
-    padding: 6px;
+    padding: 2px 0 2px 0;
   }
   
   .settings-modal-content {
@@ -416,5 +434,14 @@
   
   .question-content {
     padding: 4px;
+  }
+
+  .answer-box,
+  .steps-container,
+  .concept-box,
+  .formula-box,
+  .mistake-box {
+    padding: 4px 6px;
+    border-radius: 4px;
   }
 }
