@@ -1,4 +1,4 @@
-<div class="math-card front-card">
+<div class="math-card">
   <div class="question-content answer-box" style="font-weight: normal;">
     {{#Image}}
     <div class="question-image">
@@ -10,14 +10,14 @@
   </div>
   
   <div class="card-footer">
-    {{#Difficulty}}
-    <div class="difficulty-badge small-text">
+    {{#Diff}}
+    <div class="diff-badge small-text">
       难度: 
-      <span class="difficulty-level" id="difficultyDisplay">
-        {{Difficulty}}
+      <span class="diff-level" id="diffDisplay">
+        {{Diff}}
       </span>
     </div>
-    {{/Difficulty}}
+    {{/Diff}}
     
     <div class="settings-button small-text" id="settingsButton" onclick="toggleSettingsModal()">
       <span class="settings-icon">⚙️</span> 设置
@@ -56,8 +56,8 @@
 
 <script>
 // 更新难度显示
-function updateDifficultyStars() {
-  const display = document.getElementById('difficultyDisplay');
+function updateDiffStars() {
+  const display = document.getElementById('diffDisplay');
   if (display) {
     const level = parseInt(display.textContent);
     let stars = '';
@@ -155,7 +155,7 @@ function initFront() {
   loadSettings();
   
   // 更新难度显示
-  updateDifficultyStars();
+  updateDiffStars();
   
   // 初始化设置
   document.getElementById('fontSizeSlider').addEventListener('input', updateSettings);
