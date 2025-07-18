@@ -7,11 +7,36 @@
   --question-bg: #f9f9f9;
   --example-bg: #f3e5f5;
   --example-border: #9c27b0;
+  --primary: #2980b9;
+  --danger: #e74c3c;
+  --success: #4caf50;
+  --warning: #ffc107;
+  --info: #0288d1;
+  --muted: #666;
+  --modal-bg: #f8f9fa;
+  --modal-border: #dee2e6;
+  --modal-font-size: 14px;
+  --modal-header-color: #333;
+  --hint-bg: #e3f2fd;
+  --hint-border: #2196f3;
+  --hint-color: #0d47a1;
+  --mistake-bg: #ffebee;
+  --mistake-border: #f44336;
+  --mistake-text: #c62828;
+  --step-border: #b3e0fc;
+  --example-divider: #d1c4e9;
+  --button-bg: #3498db;
+  --button-bg-hover: #2980b9;
+  --button-color: #fff;
+  --input-border: #ccc;
+  --settings-btn-bg: #f8f9fa;
+  --settings-btn-bg-hover: #e9ecef;
+  --settings-btn-border: #dee2e6;
+  --settings-btn-border-hover: #ced4da;
 }
 
 .front-card {
   /* 仅在正面需要不同色时覆盖变量，否则可省略 */
-  /* 例：--answer-bg: #f9f9f9; --answer-border: #e1f5fe; */
 }
 
 .back-card {
@@ -30,10 +55,9 @@
   max-width: 100%;
 }
 
-/* 内容区域 */
 .section-title {
   font-weight: bold;
-  color: #2980b9;
+  color: var(--primary);
   margin: 2px 0 2px;
   font-size: calc(var(--base-font-size) * 0.9);
   letter-spacing: 0.5px;
@@ -54,8 +78,8 @@
 }
 
 .diff-badge {
-  background: #f8f9fa;
-  border: 1px solid #dee2e6;
+  background: var(--modal-bg);
+  border: 1px solid var(--modal-border);
   border-radius: 4px;
   padding: 1px 4px;
   z-index: 5;
@@ -65,40 +89,40 @@
 }
 
 .diff-level {
-  color: #e74c3c;
+  color: var(--danger);
   font-weight: bold;
 }
 
 .settings-button {
-  background: #f8f9fa;
+  background: var(--settings-btn-bg);
   color: #333;
-  border: 1px solid #dee2e6;
+  border: 1px solid var(--settings-btn-border);
   border-radius: 4px;
   padding: 1px 4px;
   cursor: pointer;
   display: flex;
   align-items: center;
   gap: 2px;
-  transition: background-color 0.2s;
+  transition: background-color 0.2s, border-color 0.2s;
 }
 
 .settings-button:hover {
-  background: #e9ecef;
-  border-color: #ced4da;
+  background: var(--settings-btn-bg-hover);
+  border-color: var(--settings-btn-border-hover);
 }
 
 .settings-icon {
   font-size: calc(var(--base-font-size) * 0.75);
-  color: #666;
+  color: var(--muted);
 }
 
 .hint {
   margin-top: 10px;
   padding: 8px;
-  background-color: #e3f2fd;
+  background-color: var(--hint-bg);
   border-radius: 4px;
-  border-left: 2px solid #2196f3;
-  color: #0d47a1;
+  border-left: 2px solid var(--hint-border);
+  color: var(--hint-color);
   cursor: pointer;
   font-size: calc(var(--base-font-size) * 0.9);
 }
@@ -121,12 +145,12 @@
 
 .concept-box {
   background-color: #e8f5e9;
-  border: 1px dashed #4caf50;
+  border: 1px dashed var(--success);
 }
 
 .formula-box {
   background-color: #fff8e1;
-  border: 1px dashed #ffc107;
+  border: 1px dashed var(--warning);
 }
 
 .example-box {
@@ -146,13 +170,13 @@
   position: absolute;
   bottom: 0;
   width: 100%;
-  border-bottom: 1px dashed #d1c4e9;
+  border-bottom: 1px dashed var(--example-divider);
 }
 
 .steps-container {
   margin: 15px 0;
-  background-color: #e3f2fd;
-  border: 1px dashed #0288d1;
+  background-color: var(--hint-bg);
+  border: 1px dashed var(--info);
   border-radius: 6px;
   padding: 10px 12px 6px 12px;
 }
@@ -169,7 +193,7 @@
 .step:not(:last-child)::after {
   content: "";
   display: block;
-  border-bottom: 1px dashed #b3e0fc;
+  border-bottom: 1px dashed var(--step-border);
   margin: 8px 0 4px 0;
 }
 
@@ -185,8 +209,8 @@
 }
 
 .mistake-box {
-  background-color: #ffebee;
-  border: 1px dashed #f44336;
+  background-color: var(--mistake-bg);
+  border: 1px dashed var(--mistake-border);
 }
 
 .mistake-list {
@@ -196,7 +220,7 @@
 
 .mistake-list li {
   margin-bottom: 6px;
-  color: #c62828;
+  color: var(--mistake-text);
 }
 
 .question-content {
@@ -243,7 +267,7 @@
   justify-content: center;
   align-items: center;
   font-family: "Segoe UI", "Noto Sans", system-ui, sans-serif !important;
-  font-size: 14px !important;
+  font-size: var(--modal-font-size) !important;
   line-height: 1.4 !important;
 }
 
@@ -252,12 +276,12 @@
 }
 
 .settings-modal-content {
-  background-color: white;
+  background-color: #fff;
   border-radius: 10px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
   overflow: hidden;
   font-family: "Segoe UI", "Noto Sans", system-ui, sans-serif !important;
-  font-size: 14px !important;
+  font-size: var(--modal-font-size) !important;
   line-height: 1.4 !important;
 }
 
@@ -266,17 +290,17 @@
   justify-content: space-between;
   align-items: center;
   padding: 15px;
-  background-color: #f8f9fa;
-  border-bottom: 1px solid #dee2e6;
+  background-color: var(--modal-bg);
+  border-bottom: 1px solid var(--modal-border);
   font-family: "Segoe UI", "Noto Sans", system-ui, sans-serif !important;
-  font-size: 14px !important;
+  font-size: var(--modal-font-size) !important;
   line-height: 1.4 !important;
 }
 
 .settings-modal-header h3 {
   margin: 0;
   font-size: 18px !important;
-  color: #333;
+  color: var(--modal-header-color);
   font-family: "Segoe UI", "Noto Sans", system-ui, sans-serif !important;
   line-height: 1.4 !important;
 }
@@ -285,25 +309,25 @@
   font-size: 24px;
   font-weight: bold;
   cursor: pointer;
-  color: #666;
+  color: var(--muted);
   font-family: "Segoe UI", "Noto Sans", system-ui, sans-serif !important;
 }
 
 .close-button:hover {
-  color: #333;
+  color: var(--modal-header-color);
 }
 
 .settings-modal-body {
   padding: 15px;
   font-family: "Segoe UI", "Noto Sans", system-ui, sans-serif !important;
-  font-size: 14px !important;
+  font-size: var(--modal-font-size) !important;
   line-height: 1.4 !important;
 }
 
 .setting {
   margin-bottom: 15px;
   font-family: "Segoe UI", "Noto Sans", system-ui, sans-serif !important;
-  font-size: 14px !important;
+  font-size: var(--modal-font-size) !important;
   line-height: 1.4 !important;
 }
 
@@ -313,7 +337,7 @@
   font-weight: bold;
   color: #555;
   font-family: "Segoe UI", "Noto Sans", system-ui, sans-serif !important;
-  font-size: 14px !important;
+  font-size: var(--modal-font-size) !important;
   line-height: 1.4 !important;
 }
 
@@ -323,27 +347,27 @@
 }
 
 .settings-modal-body button {
-  background-color: #3498db;
-  color: white;
+  background-color: var(--button-bg);
+  color: var(--button-color);
   border: none;
   border-radius: 5px;
   padding: 4px 12px;
   cursor: pointer;
-  font-size: 14px !important;
+  font-size: var(--modal-font-size) !important;
   transition: background-color 0.2s;
   font-family: "Segoe UI", "Noto Sans", system-ui, sans-serif !important;
   line-height: 1.4 !important;
 }
 
 .settings-modal-body button:hover {
-  background-color: #2980b9;
+  background-color: var(--button-bg-hover);
 }
 
 .settings-modal-body input[type='number'] {
-  border: 1px solid #ccc;
+  border: 1px solid var(--input-border);
   border-radius: 4px;
   padding: 2px 4px;
-  font-size: 14px !important;
+  font-size: var(--modal-font-size) !important;
   width: 48px;
   text-align: center;
   font-family: "Segoe UI", "Noto Sans", system-ui, sans-serif !important;
