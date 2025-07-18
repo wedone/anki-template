@@ -11,7 +11,7 @@
   {{#Steps}}
   <div class="steps-container">
     <div class="section-title">解题步骤</div>
-    <div id="stepsContent"></div>
+    <div id="stepsContentContainer">{{Steps}}</div>
   </div>
   {{/Steps}}
   
@@ -32,50 +32,29 @@
   {{#CommonMistakes}}
   <div class="mistake-box">
     <div class="section-title" style="margin: 4px 0;">易错警示</div>
-    <ul class="mistake-list" id="mistakesList"></ul>
+    <div id="mistakesContentContainer">{{CommonMistakes}}</div>
   </div>
   {{/CommonMistakes}}
 </div>
 
 
 <script>
-// 步骤处理函数 - 直接显示所有步骤
+// 步骤处理函数 - 直接显示所有步骤（保留 HTML 标签，兼容图片等内容）
 function processSteps() {
-  const stepsContent = document.getElementById('stepsContent');
-  if (!stepsContent) return; // 只需判断元素是否存在即可
-  
-  const steps = "{{Steps}}".split("||");
-  stepsContent.innerHTML = '';
-  steps.forEach((step) => {
-    const stepElement = document.createElement('div');
-    stepElement.className = 'step';
-    stepElement.innerHTML = `
-      <div class="step-content" style="display: block;">
-        <div class="math-content">${step}</div>
-      </div>
-    `;
-    stepsContent.appendChild(stepElement);
-  });
+  const stepsContent = document.getElementById('stepsContentContainer');
+  if (!stepsContent) return;
+  const content = stepsContent.innerHTML;
+  const parts = content.split('||');
+  stepsContent.innerHTML = parts.map(part => `<div class=\"step\">${part}</div>`).join("");
 }
 
-// 易错点处理
+// 易错点处理（支持 HTML 标签）
 function processMistakes() {
-  const mistakesList = document.getElementById('mistakesList');
-  if (!mistakesList) return;
-  
-  const mistakesData = "{{CommonMistakes}}";
-  if (!mistakesData) return;
-  
-  const mistakes = mistakesData.split("|");
-  mistakesList.innerHTML = '';
-  
-  mistakes.forEach(mistake => {
-    if (mistake.trim()) {
-      const li = document.createElement('li');
-      li.textContent = mistake;
-      mistakesList.appendChild(li);
-    }
-  });
+  const mistakesContent = document.getElementById('mistakesContentContainer');
+  if (!mistakesContent) return;
+  const content = mistakesContent.innerHTML;
+  const parts = content.split('|');
+  mistakesContent.innerHTML = parts.map(part => part.trim() ? `<div class=\"mistake-item\">${part}</div>` : '').join("");
 }
 
 // 应用设置函数
