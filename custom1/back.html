@@ -2,41 +2,47 @@
 <div class="math-card back-card">
   
   {{#Answer}}
-  <div class="answer-box" style="font-weight: normal;">
-    <div class="section-title" style="margin: 4px 0;">最终答案</div>
+    <div class="section-title">最终答案</div>
+  <div class="answer-box">
     <div class="math-content">{{Answer}}</div>
   </div>
   {{/Answer}}
   
+  {{#Example}}
+    <div class="section-title">典型例题</div>
+  <div class="example-box">
+    <div id="exampleContentContainer">{{Example}}</div>
+  </div>
+  {{/Example}}
+  
   {{#Steps}}
-  <div class="steps-container">
     <div class="section-title">解题步骤</div>
+  <div class="steps-container">
     <div id="stepsContentContainer">{{Steps}}</div>
   </div>
   {{/Steps}}
   
   {{#Concept}}
+    <div class="section-title">核心概念</div>
   <div class="concept-box">
-    <div class="section-title" style="margin: 4px 0;">核心概念</div>
     <div class="math-content">{{Concept}}</div>
   </div>
   {{/Concept}}
   
   {{#Formula}}
+    <div class="section-title">相关公式</div>
   <div class="formula-box">
-    <div class="section-title" style="margin: 4px 0;">关键公式</div>
     <div class="math-content">{{Formula}}</div>
   </div>
   {{/Formula}}
   
   {{#Mistakes}}
+    <div class="section-title">常见错误</div>
   <div class="mistake-box">
-    <div class="section-title" style="margin: 4px 0;">易错警示</div>
     <div id="mistakesContentContainer">{{Mistakes}}</div>
   </div>
   {{/Mistakes}}
 </div>
-
 
 <script>
 // 步骤处理函数 - 直接显示所有步骤（保留 HTML 标签，兼容图片等内容）
@@ -46,6 +52,15 @@ function processSteps() {
   const content = stepsContent.innerHTML;
   const parts = content.split('||');
   stepsContent.innerHTML = parts.map(part => `<div class=\"step\">${part}</div>`).join("");
+}
+
+// 示例处理函数
+function processExample() {
+  const exampleContent = document.getElementById('exampleContentContainer');
+  if (!exampleContent) return;
+  const content = exampleContent.innerHTML;
+  const parts = content.split('||');
+  exampleContent.innerHTML = parts.map(part => `<div class=\"example-item\">${part}</div>`).join("");
 }
 
 // 易错点处理（支持 HTML 标签）
@@ -87,6 +102,7 @@ function applySettings() {
 function initBack() {
   // 处理内容
   processSteps();
+  processExample();
   processMistakes();
   
   // 应用设置
