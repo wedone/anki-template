@@ -1,0 +1,440 @@
+/* 样式表 */
+@font-face { font-family: MiSans; src: url('_MiSans.ttf'); }
+@font-face { font-family: times; src: url('_times.ttf'); }
+@font-face { font-family: News; src: url('_Eu-bx.ttf'); }
+:root {
+  --card-padding: 6px;
+  --base-font-size: 16px;
+  --line-height: 1.5;
+  --answer-bg: #e1f5fe;
+  --answer-border: #0288d1;
+  --question-bg: #f9f9f9;
+  --example-bg: #f3e5f5;
+  --example-border: #9c27b0;
+  --primary: #2980b9;
+  --danger: #e74c3c;
+  --success: #4caf50;
+  --warning: #ffc107;
+  --info: #0288d1;
+  --muted: #666;
+  --modal-bg: #f8f9fa;
+  --modal-border: #dee2e6;
+  --modal-font-size: 14px;
+  --modal-header-color: #333;
+  --hint-bg: #e3f2fd;
+  --hint-border: #2196f3;
+  --hint-color: #0d47a1;
+  --mistake-bg: #ffebee;
+  --mistake-border: #f44336;
+  --mistake-text: #c62828;
+  --step-border: #b3e0fc;
+  --example-divider: #d1c4e9;
+  --button-bg: #3498db;
+  --button-bg-hover: #2980b9;
+  --button-color: #fff;
+  --input-border: #ccc;
+  --settings-btn-bg: #f8f9fa;
+  --settings-btn-bg-hover: #e9ecef;
+  --settings-btn-border: #dee2e6;
+  --settings-btn-border-hover: #ced4da;
+  --tag-bg: #e8f5e9;
+  --tag-border: #4caf50;
+  --source-color: #7e57c2;
+  --tag-box-bg: #f5f5f5;
+}
+
+.Mathjax {
+  font-family: "News", sans-serif;
+
+}
+
+.math-card {
+  font-family: News, MiSans,"Segoe UI", "Noto Sans", system-ui, sans-serif;
+  font-size: var(--base-font-size);
+  line-height: var(--line-height);
+  color: #333;
+  padding: var(--card-padding);
+  margin: 0;
+  width: 100%;
+  box-sizing: border-box;
+  max-width: 100%;
+}
+
+.section-title {
+  font-weight: bold;
+  color: var(--primary);
+  margin: 12px 0 6px;
+  font-size: calc(var(--base-font-size) * 0.95);
+  letter-spacing: 0.5px;
+  line-height: 1.2;
+}
+
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  position: relative;
+  gap: 6px;
+}
+
+.small-text {
+  font-size: calc(var(--base-font-size) * 0.75);
+}
+
+.diff-badge {
+  background: var(--modal-bg);
+  border: 1px solid var(--modal-border);
+  border-radius: 4px;
+  padding: 1px 4px;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.tag-badge {
+  background: var(--tag-bg);
+  border: 1px solid var(--tag-border);
+  border-radius: 4px;
+  padding: 1px 6px;
+  color: var(--success);
+  font-weight: 500;
+}
+
+.source-info {
+  font-size: calc(var(--base-font-size) * 0.85);
+  color: var(--source-color);
+  margin: 6px 0;
+  padding: 4px 6px;
+  background: #f3f1ff;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.meta-label {
+  font-weight: bold;
+  color: var(--primary);
+}
+
+.diff-level {
+  color: var(--danger);
+  font-weight: bold;
+}
+
+.settings-button {
+  background: var(--settings-btn-bg);
+  color: #333;
+  border: 1px solid var(--settings-btn-border);
+  border-radius: 4px;
+  padding: 1px 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.settings-button:hover {
+  background: var(--settings-btn-bg-hover);
+  border-color: var(--settings-btn-border-hover);
+}
+
+.settings-icon {
+  font-size: calc(var(--base-font-size) * 0.75);
+  color: var(--muted);
+}
+
+.hint {
+  margin-top: 10px;
+  padding: 8px;
+  background-color: var(--hint-bg);
+  border-radius: 4px;
+  border-left: 2px solid var(--hint-border);
+  color: var(--hint-color);
+  cursor: pointer;
+  font-size: calc(var(--base-font-size) * 0.9);
+}
+
+.hint .hint-text {
+  opacity: 0.5;
+}
+
+.hint.revealed .hint-text {
+  opacity: 1;
+}
+
+.concept-box, .formula-box, .mistake-box, .answer-box, .example-box, .tag-box {
+  margin: 8px 0;
+  padding: 8px;
+  border-radius: 6px;
+  font-weight: normal;
+  font-size: var(--base-font-size);
+}
+
+.concept-box {
+  background-color: #e8f5e9;
+  border: 1px dashed var(--success);
+}
+
+.formula-box {
+  background-color: #fff8e1;
+  border: 1px dashed var(--warning);
+}
+
+.example-box {
+  background-color: var(--example-bg);
+  border: 1px dashed var(--example-border);
+}
+
+.example-item {
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  position: relative;
+}
+
+.example-item:not(:last-child)::after {
+  content: "";
+  display: block;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  border-bottom: 1px dashed var(--example-divider);
+}
+
+.steps-container {
+  margin: 15px 0;
+  background-color: var(--hint-bg);
+  border: 1px dashed var(--info);
+  border-radius: 6px;
+  padding: 10px 12px;
+}
+
+.step {
+  margin-bottom: 0;
+  border-radius: 0;
+  background: none;
+  border: none;
+  padding: 0;
+  position: relative;
+}
+
+.answer-box {
+  background-color: var(--answer-bg);
+  border: 1px dashed var(--answer-border);
+}
+
+.mistake-box {
+  background-color: var(--mistake-bg);
+  border: 1px dashed var(--mistake-border);
+}
+
+.mistake-item {
+  margin-bottom: 6px;
+  color: var(--mistake-text);
+  padding: 4px 0;
+  border-bottom: 1px solid rgba(198, 40, 40, 0.1);
+}
+
+.tag-box {
+  background-color: var(--tag-box-bg);
+  border: 1px dashed var(--tag-border);
+  padding: 6px 10px;
+  font-size: calc(var(--base-font-size) * 0.9);
+}
+
+.question-content {
+  padding: 8px;
+  background-color: var(--question-bg);
+  border-radius: 6px;
+  margin: 8px 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.question-text {
+  font-size: calc(var(--base-font-size) * 1.05);
+}
+
+.question-image {
+  text-align: center;
+  margin: 8px 0;
+}
+
+.question-image img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+}
+
+@media (min-width: 769px) {
+  .math-card {
+    max-width: 95%;
+    margin: 0 auto;
+    padding: 12px;
+  }
+}
+
+.settings-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+  font-family: "Segoe UI", "Noto Sans", system-ui, sans-serif !important;
+  font-size: var(--modal-font-size) !important;
+  line-height: 1.4 !important;
+}
+
+.settings-modal.show {
+  display: flex;
+}
+
+.settings-modal-content {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  font-family: "Segoe UI", "Noto Sans", system-ui, sans-serif !important;
+  font-size: var(--modal-font-size) !important;
+  line-height: 1.4 !important;
+}
+
+.settings-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  background-color: var(--modal-bg);
+  border-bottom: 1px solid var(--modal-border);
+  font-family: "Segoe UI", "Noto Sans", system-ui, sans-serif !important;
+  font-size: var(--modal-font-size) !important;
+  line-height: 1.4 !important;
+}
+
+.settings-modal-header h3 {
+  margin: 0;
+  font-size: 18px !important;
+  color: var(--modal-header-color);
+  font-family: "Segoe UI", "Noto Sans", system-ui, sans-serif !important;
+  line-height: 1.4 !important;
+}
+
+.close-button {
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+  color: var(--muted);
+  font-family: "Segoe UI", "Noto Sans", system-ui, sans-serif !important;
+}
+
+.close-button:hover {
+  color: var(--modal-header-color);
+}
+
+.settings-modal-body {
+  padding: 15px;
+  font-family: "Segoe UI", "Noto Sans", system-ui, sans-serif !important;
+  font-size: var(--modal-font-size) !important;
+  line-height: 1.4 !important;
+}
+
+.setting {
+  margin-bottom: 15px;
+  font-family: "Segoe UI", "Noto Sans", system-ui, sans-serif !important;
+  font-size: var(--modal-font-size) !important;
+  line-height: 1.4 !important;
+}
+
+.setting label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #555;
+  font-family: "Segoe UI", "Noto Sans", system-ui, sans-serif !important;
+  font-size: var(--modal-font-size) !important;
+  line-height: 1.4 !important;
+}
+
+.setting input[type="range"] {
+  width: 100%;
+  margin: 8px 0;
+}
+
+.settings-modal-body button {
+  background-color: var(--button-bg);
+  color: var(--button-color);
+  border: none;
+  border-radius: 5px;
+  padding: 4px 12px;
+  cursor: pointer;
+  font-size: var(--modal-font-size) !important;
+  transition: background-color 0.2s;
+  font-family: "Segoe UI", "Noto Sans", system-ui, sans-serif !important;
+  line-height: 1.4 !important;
+}
+
+.settings-modal-body button:hover {
+  background-color: var(--button-bg-hover);
+}
+
+.settings-modal-body input[type='number'] {
+  border: 1px solid var(--input-border);
+  border-radius: 4px;
+  padding: 2px 4px;
+  font-size: var(--modal-font-size) !important;
+  width: 48px;
+  text-align: center;
+  font-family: "Segoe UI", "Noto Sans", system-ui, sans-serif !important;
+  line-height: 1.4 !important;
+}
+
+@media (max-width: 768px) {
+  :root {
+    --card-padding: 4px;
+  }
+  
+  .math-card {
+    width: 100%;
+    max-width: 100%;
+    padding: 4px;
+  }
+  
+  .settings-modal-content {
+    width: 98%;
+    max-width: 350px;
+  }
+  
+  .question-content {
+    padding: 4px;
+  }
+
+  .answer-box,
+  .example-box,
+  .steps-container,
+  .concept-box,
+  .formula-box,
+  .mistake-box,
+  .tag-box {
+    padding: 4px 6px;
+    border-radius: 4px;
+  }
+  
+  .step {
+    padding-bottom: 6px;
+    margin-bottom: 6px;
+  }
+  
+  .tag-badge {
+    max-width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}

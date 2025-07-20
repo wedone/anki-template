@@ -1,0 +1,201 @@
+<!-- 正面模板 -->
+<div class="math-card">
+    <div class="question-content answer-box" style="font-weight: normal;">
+      {{#Image}}
+      <div class="question-image">
+        {{Image}}
+      </div>
+      {{/Image}}
+      
+      <div class="question-text math-content">{{Question}}</div>
+    </div>
+    
+    <div class="card-footer">
+      {{#Diff}}
+      <div class="diff-badge small-text">
+        难度: 
+        <span class="diff-level" id="diffDisplay">
+          {{Diff}}
+        </span>
+      </div>
+      {{/Diff}}
+      
+      <!-- 标签显示 -->
+      {{#tag}}
+      <div class="tag-badge small-text">
+        <span class="settings-icon">🏷️</span> {{tag}}
+      </div>
+      {{/tag}}
+      
+      <div class="settings-button small-text" id="settingsButton" onclick="toggleSettingsModal()">
+        <span class="settings-icon">⚙️</span> 设置
+      </div>
+    </div>
+    
+    {{#Hint}}
+    <div class="hint" onclick="this.classList.toggle('revealed')">
+      提示: <span class="hint-text">{{Hint}}</span>
+    </div>
+    {{/Hint}}
+    
+    <!-- 设置弹窗 -->
+    <div id="settingsModal" class="settings-modal">
+      <div class="settings-modal-content" style="width:320px;max-width:90%;top:24px;position:absolute;left:50%;transform:translateX(-50%);">
+        <div class="settings-modal-header" style="padding-bottom:8px;">
+          <h3 style="font-size:18px;margin:0;">卡片设置</h3>
+          <span class="close-button" onclick="toggleSettingsModal()">&times;</span>
+        </div>
+        <div class="settings-modal-body" style="padding:12px;">
+          <div class="setting" style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">
+            <label style="white-space:nowrap;width:80px;">字体大小</label>
+            <input type="range" min="12" max="24" value="18" id="fontSizeSlider" style="width:180px;">
+            <span id="fontSizeValue" style="width:40px;text-align:right;">18px</span>
+          </div>
+          <div class="setting" style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">
+            <label style="white-space:nowrap;width:80px;">行间距</label>
+            <input type="range" min="13" max="20" value="15" id="lineHeightSlider" style="width:180px;">
+            <span id="lineHeightValue" style="width:40px;text-align:right;">1.5</span>
+          </div>
+          <button onclick="applyDefaultSettings()" style="margin-top:8px;">恢复默认</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+  // 更新难度显示
+  function updateDiffStars() {
+    const display = document.getElementById('diffDisplay');
+    if (display) {
+      const level = parseInt(display.textContent);
+      let stars = '';
+      switch(level) {
+        case 1: stars = '★☆☆☆☆'; break;
+        case 2: stars = '★★☆☆☆'; break;
+        case 3: stars = '★★★☆☆'; break;
+        case 4: stars = '★★★★☆'; break;
+        case 5: stars = '★★★★★'; break;
+        default: stars = level;
+      }
+      display.textContent = stars;
+    }
+  }
+  
+  // 设置功能
+  window.frontSettings = {
+    fontSize: 18,
+    lineHeight: 1.5
+  };
+  
+  // 保存设置到localStorage
+  function saveSettings() {
+    try {
+      localStorage.setItem('ankiCardSettings', JSON.stringify(window.frontSettings));
+    } catch (e) {
+      console.warn('无法保存设置到localStorage:', e);
+    }
+  }
+  
+  // 从localStorage加载设置
+  function loadSettings() {
+    try {
+      const savedSettings = localStorage.getItem('ankiCardSettings');
+      if (savedSettings) {
+        const parsed = JSON.parse(savedSettings);
+        window.frontSettings = {
+          fontSize: parsed.fontSize || 16,
+          lineHeight: parsed.lineHeight || 1.5
+        };
+        return true;
+      }
+    } catch (e) {
+      console.warn('无法从localStorage加载设置:', e);
+    }
+    return false;
+  }
+  
+  function toggleSettingsModal() {
+    const modal = document.getElementById('settingsModal');
+    if (modal.classList.contains('show')) {
+      modal.classList.remove('show');
+    } else {
+      modal.classList.add('show');
+      // 加载当前设置到滑块
+      document.getElementById('fontSizeSlider').value = window.frontSettings.fontSize;
+      document.getElementById('lineHeightSlider').value = window.frontSettings.lineHeight * 10;
+      updateSettingsDisplay();
+    }
+  }
+  
+  function updateSettings() {
+    window.frontSettings.fontSize = parseInt(document.getElementById('fontSizeSlider').value);
+    window.frontSettings.lineHeight = parseInt(document.getElementById('lineHeightSlider').value) / 10;
+    
+    updateSettingsDisplay();
+    applySettings();
+    // 保存设置
+    saveSettings();
+  }
+  
+  function updateSettingsDisplay() {
+    document.getElementById('fontSizeValue').textContent = window.frontSettings.fontSize + 'px';
+    document.getElementById('lineHeightValue').textContent = window.frontSettings.lineHeight;
+  }
+  
+  function applySettings() {
+    document.documentElement.style.setProperty('--base-font-size', `${window.frontSettings.fontSize}px`);
+    document.documentElement.style.setProperty('--line-height', window.frontSettings.lineHeight);
+  }
+  
+  function applyDefaultSettings() {
+    window.frontSettings.fontSize = 16;
+    window.frontSettings.lineHeight = 1.5;
+    document.getElementById('fontSizeSlider').value = 16;
+    document.getElementById('lineHeightSlider').value = 15;
+    updateSettings();
+    // 保存默认设置
+    saveSettings();
+  }
+  
+  // 初始化函数
+  function initFront() {
+    // 加载保存的设置
+    loadSettings();
+    
+    // 更新难度显示
+    updateDiffStars();
+    
+    // 初始化设置
+    document.getElementById('fontSizeSlider').addEventListener('input', updateSettings);
+    document.getElementById('lineHeightSlider').addEventListener('input', updateSettings);
+    
+    // 应用设置
+    applySettings();
+    
+    // 点击模态框外部关闭模态框
+    window.addEventListener('click', function(event) {
+      const modal = document.getElementById('settingsModal');
+      if (event.target === modal) {
+        modal.classList.remove('show');
+      }
+    });
+    
+    // 渲染数学公式
+    MathJax.typesetPromise().catch(console.error);
+  }
+  
+  // MathJax 配置
+  MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$', '$$'], ['\\[', '\\]']]
+    },
+    options: {
+      enableMenu: false
+    }
+  };
+  
+  // 执行初始化
+  setTimeout(initFront, 50);
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>

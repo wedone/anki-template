@@ -1,0 +1,153 @@
+<!-- 背面模板 -->
+{{FrontSide}}
+<div class="math-card back-card">
+  
+  <!-- 来源信息 -->
+  {{#来源}}
+  <div class="source-info">
+    <span class="meta-label">来源:</span> {{来源}}
+  </div>
+  {{/来源}}
+
+  <!-- 最终答案 -->
+  {{#Answer}}
+    <div class="section-title">最终答案</div>
+  <div class="answer-box">
+    <div class="math-content">{{Answer}}</div>
+  </div>
+  {{/Answer}}
+
+  
+  <!-- 典型例题 -->
+  {{#Example}}
+    <div class="section-title">典型例题</div>
+  <div class="example-box">
+    <div id="exampleContentContainer">{{Example}}</div>
+  </div>
+  {{/Example}}
+  
+  <!-- 解题步骤 -->
+  <div class="section-title">解题步骤</div>
+  <div class="steps-container">
+    {{#Answer-1}}<div class="step">{{Answer-1}}</div>{{/Answer-1}}
+    {{#Answer-2}}<div class="step">{{Answer-2}}</div>{{/Answer-2}}
+    {{#Answer-3}}<div class="step">{{Answer-3}}</div>{{/Answer-3}}
+    {{#Answer-4}}<div class="step">{{Answer-4}}</div>{{/Answer-4}}
+    {{#Answer-5}}<div class="step">{{Answer-5}}</div>{{/Answer-5}}
+    {{#Answer-6}}<div class="step">{{Answer-6}}</div>{{/Answer-6}}
+    {{#Answer-7}}<div class="step">{{Answer-7}}</div>{{/Answer-7}}
+    {{#Answer-8}}<div class="step">{{Answer-8}}</div>{{/Answer-8}}
+    {{#Answer-9}}<div class="step">{{Answer-9}}</div>{{/Answer-9}}
+    {{#Answer-10}}<div class="step">{{Answer-10}}</div>{{/Answer-10}}
+    {{#Answer-11}}<div class="step">{{Answer-11}}</div>{{/Answer-11}}
+    {{#Answer-12}}<div class="step">{{Answer-12}}</div>{{/Answer-12}}
+    {{#Answer-13}}<div class="step">{{Answer-13}}</div>{{/Answer-13}}
+    {{#Answer-14}}<div class="step">{{Answer-14}}</div>{{/Answer-14}}
+    {{#Answer-15}}<div class="step">{{Answer-15}}</div>{{/Answer-15}}
+    {{#Answer-16}}<div class="step">{{Answer-16}}</div>{{/Answer-16}}
+    {{#Answer-17}}<div class="step">{{Answer-17}}</div>{{/Answer-17}}
+    {{#Answer-18}}<div class="step">{{Answer-18}}</div>{{/Answer-18}}
+    {{#Answer-19}}<div class="step">{{Answer-19}}</div>{{/Answer-19}}
+    {{#Answer-20}}<div class="step">{{Answer-20}}</div>{{/Answer-20}}
+  </div>
+  
+  <!-- 核心概念 -->
+  {{#Concept}}
+    <div class="section-title">核心概念</div>
+  <div class="concept-box">
+    <div class="math-content">{{Concept}}</div>
+  </div>
+  {{/Concept}}
+  
+  <!-- 相关公式 -->
+  {{#Formula}}
+    <div class="section-title">相关公式</div>
+  <div class="formula-box">
+    <div class="math-content">{{Formula}}</div>
+  </div>
+  {{/Formula}}
+  
+  <!-- 常见错误 -->
+  {{#Mistakes}}
+    <div class="section-title">常见错误</div>
+  <div class="mistake-box">
+    <div id="mistakesContentContainer">{{Mistakes}}</div>
+  </div>
+  {{/Mistakes}}
+  
+  <!-- 标签显示 -->
+  {{#tag}}
+  <div class="section-title">标签</div>
+  <div class="tag-box">
+    {{tag}}
+  </div>
+  {{/tag}}
+</div>
+
+<script>
+// 应用设置函数
+function applySettings() {
+  // 从localStorage加载设置
+  let frontSettings = window.frontSettings;
+  if (!frontSettings) {
+    try {
+      const savedSettings = localStorage.getItem('ankiCardSettings');
+      if (savedSettings) {
+        const parsed = JSON.parse(savedSettings);
+        frontSettings = {
+          fontSize: parsed.fontSize || 16,
+          lineHeight: parsed.lineHeight || 1.5,
+        };
+      } else {
+        frontSettings = { fontSize: 16, lineHeight: 1.5 };
+      }
+    } catch (e) {
+      console.warn('无法从localStorage加载设置:', e);
+      frontSettings = { fontSize: 16, lineHeight: 1.5 };
+    }
+  }
+  
+  document.documentElement.style.setProperty('--base-font-size', `${frontSettings.fontSize}px`);
+  document.documentElement.style.setProperty('--line-height', frontSettings.lineHeight);
+}
+
+// 初始化函数
+function initBack() {
+  // 应用设置
+  applySettings();
+  
+  // 渲染数学公式
+  MathJax.typesetPromise().catch(console.error);
+  
+  // 添加步骤分隔线
+  const steps = document.querySelectorAll('.steps-container .step');
+  steps.forEach((step, index) => {
+    if (index < steps.length - 1) {
+      step.style.borderBottom = '1px dashed var(--step-border)';
+      step.style.paddingBottom = '8px';
+      step.style.marginBottom = '8px';
+    }
+  });
+  
+  // 处理常见错误
+  processMistakes();
+}
+
+// 常见错误处理
+function processMistakes() {
+  const mistakesContent = document.getElementById('mistakesContentContainer');
+  if (!mistakesContent) return;
+  
+  const content = mistakesContent.innerHTML;
+  const parts = content.split('|');
+  
+  if (parts.length > 1) {
+    mistakesContent.innerHTML = parts.map(part => 
+      part.trim() ? `<div class="mistake-item">${part}</div>` : ''
+    ).join("");
+  }
+}
+
+// 执行初始化
+setTimeout(initBack, 50);
+</script>
