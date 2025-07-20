@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MathJax 本地字体测试</title>
+
+  <!-- Polyfill for older browsers -->
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+
+  <!-- MathJax 3.x 配置 -->
+  <script>
+    window.MathJax = {
+      tex: {
+        // 支持的行内公式和显示公式定界符
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        // 加载 AMS 宏包（推荐）
+        packages: {'[+]': ['ams']}
+      },
+      chtml: {
+        // 禁止加载网络字体，使用本地字体
+        fontURL: null,
+
+        // 可选：指定 CSS 类名前缀，便于调试
+        scale: 1.2
+      },
+      startup: {
+        ready: () => {
+          console.log('MathJax 已加载');
+          MathJax.startup.defaultReady();
+          console.log('公式已渲染完成');
+        }
+      }
+    };
+  </script>
+
+  <!-- 加载 MathJax 3.x -->
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <style>
+    body {
+      font-family: 'MiSans';
+      /* font-family: 'MiSans', 'Times New Roman', 'STIXGeneral', 'Arial Unicode MS', serif; */
+      font-size: 18px;
+      line-height: 1.6;
+      padding: 40px;
+      max-width: 800px;
+      margin: auto;
+    }
+
+    /* 可选：覆盖 MathJax 默认字体，强制使用本地字体 */
+    .mjx-math {
+      font-family: 'Cambria Math' !important;
+      /* font-family: 'MiSans', 'STIXGeneral', 'Cambria Math', 'Asana Math', 'DejaVu Math TeX Gyre', 'TeX Gyre Termes Math', serif !important; */
+
+    }
+  </style>
+</head>
+<body>
+
+  <h1>✅ MathJax 本地字体测试页面</h1>
+
+  <p>这是一个行内公式：$E = mc^2$，另一个是 $\alpha + \beta = \gamma$</p>
+
+  <p>这是一个显示公式：</p>
+  $$
+  \int_0^\infty e^{-x^2} dx = \frac{\sqrt{\pi}}{2}
+  $$
+
+  <p>另一个显示公式：</p>
+  $$
+  \sum_{n=1}^\infty \frac{1}{n^2} = \frac{\pi^2}{6}
+  $$
+
+  <p>带编号的公式（使用 AMS）：</p>
+  $$
+  \begin{equation}
+  \mathbf{F} = \frac{d\mathbf{p}}{dt}
+  \end{equation}
+  $$
+
+</body>
+</html>
