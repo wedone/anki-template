@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>Anki 数学问答模板预览</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <style>
+    body { background: #f5f6fa; }
+    .main-flex { display: flex; max-width: 1400px; margin: 30px auto; background: #fff; border-radius: 8px; box-shadow: 0 2px 12px #0001; min-height: 700px; }
+    .form-panel { flex: 1 1 0; min-width: 0; border-right: 1px solid #eee; padding: 32px 24px 24px 24px; background: #fafbfc; }
+    .preview-panel { flex: 1 1 0; min-width: 0; padding: 32px 32px 24px 32px; display: flex; flex-direction: column; align-items: stretch; }
+    .form-title { text-align: center; font-size: 22px; font-weight: bold; color: #2980b9; margin-bottom: 18px; }
+    .btn-group { display: flex; gap: 12px; margin-bottom: 18px; justify-content: flex-start; align-items: center; }
+    .side-btn { background: #eee; color: #2980b9; border: 1px solid #bcd; border-radius: 4px; padding: 6px 18px; font-size: 16px; margin-right: 0; cursor: pointer; transition: background 0.2s, color 0.2s; }
+    .side-btn.active, .side-btn:active { background: #3498db; color: #fff; border-color: #2980b9; }
+    .side-btn:not(.active):hover { background: #e3f2fd; }
+    .btn { background: #3498db; color: #fff; border: none; border-radius: 4px; padding: 6px 18px; margin-right: 8px; cursor: pointer; font-size: 16px; }
+    .btn:hover { background: #2980b9; }
+    .preview-toolbar { display: flex; gap: 12px; align-items: center; margin-bottom: 18px; }
+    .preview-mode-btn { background: #eee; color: #2980b9; border: 1px solid #bcd; border-radius: 4px; padding: 6px 18px; font-size: 16px; cursor: pointer; transition: background 0.2s, color 0.2s; }
+    .preview-mode-btn.active, .preview-mode-btn:active { background: #3498db; color: #fff; border-color: #2980b9; }
+    .preview-mode-btn:not(.active):hover { background: #e3f2fd; }
+    .preview-frame { width: 100%; min-height: 650px; border: 1px solid #eee; border-radius: 6px; background: #fff; box-shadow: 0 2px 8px #0001; transition: width 0.3s, margin 0.3s, box-shadow 0.3s, border-radius 0.3s; }
+    .preview-frame.mobile { width: 500px; min-width: 340px; max-width: 500px; margin: 0 auto; border-radius: 16px; box-shadow: 0 0 0 6px #2222, 0 2px 16px #0002; border: 1px solid #bbb; }
+    .preview-panel.mobile { align-items: center; }
+    /* 字段列表交互样式 */
+    .field-list { list-style: none; padding: 0; margin: 0; }
+    .field-item { border-bottom: 1px solid #eee; padding: 0; }
+    .field-header { display: flex; align-items: center; cursor: pointer; padding: 8px 0; transition: background 0.2s; }
+    .field-header:hover { background: #e3f2fd; }
+    .field-label { flex: 0 0 100px; color: #2980b9; font-weight: bold; }
+    .field-status { flex: 1; color: #888; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .field-dot { width: 8px; height: 8px; border-radius: 50%; background: #4caf50; display: inline-block; margin-right: 8px; }
+    .field-item.filled .field-label { color: #4caf50; }
+    .field-item.filled .field-status { color: #333; }
+    .field-input-wrap { display: none; padding: 8px 0 12px 0; }
+    .field-item.active .field-input-wrap { display: block; }
+    .field-item.active .field-header { background: #e3f2fd; }
+    textarea { width: 100%; min-height: 36px; font-size: 15px; border-radius: 4px; border: 1px solid #ccc; padding: 4px 8px; }
+    @media (max-width: 1100px) {
+      .main-flex { flex-direction: column; }
+      .form-panel, .preview-panel { padding: 18px 8px; }
+      .form-panel { border-right: none; border-bottom: 1px solid #eee; }
+    }
+  </style>
+</head>
+<body>
+  <div class="main-flex">
+    <div class="form-panel">
+      <div class="form-title">Anki 数学问答模板预览</div>
+      <form id="ankiForm" method="post" target="previewFrame" autocomplete="off">
+        <div class="btn-group">
+          <button type="button" class="side-btn" id="frontBtn">正面预览</button>
+          <button type="button" class="side-btn" id="backBtn">背面预览</button>
+          <button class="btn" type="submit" id="refreshBtn">刷新预览</button>
+          <button class="btn" type="button" onclick="clearForm()" style="background:#e74c3c;">清空</button>
+        </div>
+        <input type="hidden" name="side" id="sideInput" value="front">
+        <ul class="field-list" id="fieldList">
+        {% for field in data.keys() %}
+          <li class="field-item" data-field="{{ field }}">
+            <div class="field-header">
+              <span class="field-label">{{ field }}</span>
+              <span class="field-status"></span>
+            </div>
+            <div class="field-input-wrap">
+              <textarea name="{{ field }}" data-field-input="{{ field }}">{{ data[field] }}</textarea>
+            </div>
+          </li>
+        {% endfor %}
+        </ul>
+      </form>
+    </div>
+    <div class="preview-panel" id="previewPanel">
+      <div class="preview-toolbar">
+        <button type="button" class="preview-mode-btn active" id="desktopModeBtn">桌面预览</button>
+        <button type="button" class="preview-mode-btn" id="mobileModeBtn">手机预览</button>
+      </div>
+      <iframe name="previewFrame" class="preview-frame" id="previewFrame"></iframe>
+    </div>
+  </div>
+  <script>
+    let currentSide = 'front';
+    let currentMode = 'desktop';
+    function setPreviewSide(side) {
+      currentSide = side;
+      document.getElementById('sideInput').value = side;
+      document.getElementById('frontBtn').classList.toggle('active', side === 'front');
+      document.getElementById('backBtn').classList.toggle('active', side === 'back');
+      document.getElementById('ankiForm').action = '/preview/' + side;
+      document.getElementById('ankiForm').submit();
+    }
+    document.getElementById('frontBtn').onclick = function() { setPreviewSide('front'); };
+    document.getElementById('backBtn').onclick = function() { setPreviewSide('back'); };
+    document.getElementById('refreshBtn').onclick = function(e) {
+      e.preventDefault();
+      document.getElementById('ankiForm').submit();
+    };
+    function clearForm() {
+      var t = document.querySelectorAll('.form-panel textarea');
+      t.forEach(e => e.value = '');
+      updateFieldStatus();
+      setTimeout(() => setPreviewSide(currentSide), 10);
+    }
+    // 预览模式切换
+    function setPreviewMode(mode) {
+      currentMode = mode;
+      const frame = document.getElementById('previewFrame');
+      const panel = document.getElementById('previewPanel');
+      document.getElementById('desktopModeBtn').classList.toggle('active', mode === 'desktop');
+      document.getElementById('mobileModeBtn').classList.toggle('active', mode === 'mobile');
+      if (mode === 'mobile') {
+        frame.classList.add('mobile');
+        panel.classList.add('mobile');
+      } else {
+        frame.classList.remove('mobile');
+        panel.classList.remove('mobile');
+      }
+    }
+    document.getElementById('desktopModeBtn').onclick = function() { setPreviewMode('desktop'); };
+    document.getElementById('mobileModeBtn').onclick = function() { setPreviewMode('mobile'); };
+    // 字段交互
+    function updateFieldStatus() {
+      document.querySelectorAll('.field-item').forEach(function(item) {
+        const field = item.getAttribute('data-field');
+        const textarea = item.querySelector('textarea');
+        const status = item.querySelector('.field-status');
+        let val = textarea.value.trim();
+        if (val) {
+          item.classList.add('filled');
+          status.innerHTML = '<span class="field-dot"></span>' + (val.length > 20 ? val.slice(0, 20) + '...' : val);
+        } else {
+          item.classList.remove('filled');
+          status.textContent = '未填写';
+        }
+      });
+    }
+    document.querySelectorAll('.field-header').forEach(function(header) {
+      header.onclick = function() {
+        const item = header.parentElement;
+        const isActive = item.classList.contains('active');
+        document.querySelectorAll('.field-item').forEach(i => i.classList.remove('active'));
+        if (!isActive) item.classList.add('active');
+        // 聚焦输入框
+        if (!isActive) setTimeout(() => item.querySelector('textarea').focus(), 100);
+      };
+    });
+    document.querySelectorAll('.field-input-wrap textarea').forEach(function(textarea) {
+      textarea.oninput = updateFieldStatus;
+    });
+    // 默认加载正面预览和桌面模式
+    window.onload = function() {
+      setPreviewSide('front');
+      setPreviewMode('desktop');
+      updateFieldStatus();
+    }
+  </script>
+</body>
+</html> 
