@@ -9,6 +9,21 @@ FIELDS = [
     'Question', 'Answer', 'Diff', 'tag', 'Hint', 'Image', '来源', 'Example', 'Concept', 'Formula', 'Mistakes',
 ] + [f'Answer-{i}' for i in range(1, 21)]
 
+def render_with_safe_fields(tpl, data):
+    placeholders = {}
+    safe_data = {}
+    for k, v in data.items():
+        if v:
+            ph = f'__SAFE_FIELD_{k}__'
+            placeholders[ph] = v
+            safe_data[k] = ph
+        else:
+            safe_data[k] = ''
+    rendered = pystache.render(tpl, safe_data)
+    for ph, v in placeholders.items():
+        rendered = rendered.replace(ph, v)
+    return rendered
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
     data = {field: '' for field in FIELDS}
@@ -23,26 +38,21 @@ def index():
 def preview(side):
     data = {field: request.form.get(field, '') for field in FIELDS}
     if side == 'back':
-        # 渲染正面，得到 HTML
         with open(os.path.join(app.template_folder, 'front.html'), encoding='utf-8') as f:
             front_tpl = f.read()
-        front_html = pystache.render(front_tpl, data)
-        # 用唯一占位符替换 back.html 里的 {{FrontSide}}
+        front_html = render_with_safe_fields(front_tpl, data)
         tpl_file = 'back.html'
         with open(os.path.join(app.template_folder, tpl_file), encoding='utf-8') as f:
             tpl = f.read()
-        # 用唯一占位符替换所有 {{FrontSide}} 和 {{{FrontSide}}}
         placeholder = '__FRONT_SIDE_PLACEHOLDER__'
         tpl = tpl.replace('{{FrontSide}}', placeholder).replace('{{{FrontSide}}}', placeholder)
-        body = pystache.render(tpl, {**data, 'FrontSide': ''})
-        # 渲染后再替换占位符为 front_html
+        body = render_with_safe_fields(tpl, {**data, 'FrontSide': ''})
         body = body.replace(placeholder, front_html)
     else:
         tpl_file = 'front.html'
         with open(os.path.join(app.template_folder, tpl_file), encoding='utf-8') as f:
             tpl = f.read()
-        body = pystache.render(tpl, data)
-    # 包裹完整 HTML
+        body = render_with_safe_fields(tpl, data)
     html = f'''<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
