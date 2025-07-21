@@ -96,12 +96,6 @@
       e.preventDefault();
       document.getElementById('ankiForm').submit();
     };
-    function clearForm() {
-      var t = document.querySelectorAll('.form-panel textarea');
-      t.forEach(e => e.value = '');
-      updateFieldStatus();
-      setTimeout(() => setPreviewSide(currentSide), 10);
-    }
     // 预览模式切换
     function setPreviewMode(mode) {
       currentMode = mode;
@@ -148,8 +142,50 @@
     document.querySelectorAll('.field-input-wrap textarea').forEach(function(textarea) {
       textarea.oninput = updateFieldStatus;
     });
-    // 默认加载正面预览和桌面模式
+    // 让预览 iframe 高度自适应内容
+    function resizePreviewFrame() {
+      const frame = document.getElementById('previewFrame');
+      try {
+        if (frame.contentDocument && frame.contentDocument.body) {
+          frame.style.height = frame.contentDocument.body.scrollHeight + 'px';
+        }
+      } catch (e) {}
+    }
+    document.getElementById('previewFrame').addEventListener('load', resizePreviewFrame);
+
+    // 字段输入内容自动保存/恢复
+    const STORAGE_KEY = 'ankiFormData';
+    function saveFormData() {
+      const data = {};
+      document.querySelectorAll('.field-input-wrap textarea').forEach(function(textarea) {
+        data[textarea.name] = textarea.value;
+      });
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    }
+    function loadFormData() {
+      const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+      document.querySelectorAll('.field-input-wrap textarea').forEach(function(textarea) {
+        if (data.hasOwnProperty(textarea.name)) {
+          textarea.value = data[textarea.name];
+        }
+      });
+    }
+    document.querySelectorAll('.field-input-wrap textarea').forEach(function(textarea) {
+      textarea.addEventListener('input', saveFormData);
+    });
+
+    // 清空按钮也清除 localStorage
+    function clearForm() {
+      var t = document.querySelectorAll('.form-panel textarea');
+      t.forEach(e => e.value = '');
+      localStorage.removeItem(STORAGE_KEY);
+      updateFieldStatus();
+      setTimeout(() => setPreviewSide(currentSide), 10);
+    }
+
+    // 默认加载正面预览和桌面模式，并恢复字段内容
     window.onload = function() {
+      loadFormData();
       setPreviewSide('front');
       setPreviewMode('desktop');
       updateFieldStatus();
