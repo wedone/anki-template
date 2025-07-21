@@ -38,6 +38,14 @@
     .field-item.active .field-input-wrap { display: block; }
     .field-item.active .field-header { background: #e3f2fd; }
     textarea { width: 100%; min-height: 36px; font-size: 15px; border-radius: 4px; border: 1px solid #ccc; padding: 4px 8px; }
+    .field-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-bottom: 18px; }
+    .field-btn { background: #f5f6fa; border: 1px solid #bcd; border-radius: 6px; padding: 10px 6px; font-size: 15px; color: #2980b9; cursor: pointer; transition: background 0.2s, color 0.2s, border 0.2s; text-align: center; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+    .field-btn.filled { color: #4caf50; border-color: #4caf50; font-weight: bold; }
+    .field-btn.active { background: #e3f2fd; border-color: #3498db; color: #3498db; }
+    .field-input-float { position: absolute; z-index: 100; background: #fff; border: 1.5px solid #3498db; border-radius: 10px; box-shadow: 0 6px 32px #0002; padding: 24px 24px 18px 24px; min-width: 340px; max-width: 420px; display: none; transition: box-shadow 0.2s; }
+    .field-input-float label { font-weight: bold; color: #2980b9; margin-bottom: 12px; display: block; font-size: 18px; }
+    .field-input-float textarea { width: 100%; min-height: 80px; font-size: 16px; border-radius: 6px; border: 1px solid #ccc; padding: 8px 10px; margin-bottom: 10px; }
+    .field-input-float .close-btn { position: absolute; top: 8px; right: 14px; background: none; border: none; font-size: 22px; color: #888; cursor: pointer; }
     @media (max-width: 1100px) {
       .main-flex { flex-direction: column; }
       .form-panel, .preview-panel { padding: 18px 8px; }
@@ -59,9 +67,9 @@
           <button class="btn" type="button" id="saveServerBtn" style="background:#f39c12;">保存到服务器</button>
         </div>
         <input type="hidden" name="side" id="sideInput" value="front">
-        <ul class="field-list" id="fieldList">
-          <!-- 字段输入区由JS动态生成 -->
-        </ul>
+        <div class="field-grid" id="fieldGrid"></div>
+        <div id="fieldInputFloat" class="field-input-float" style="display:none;"></div>
+        <div id="hiddenFields" style="display:none;"></div>
       </form>
     </div>
     <div class="preview-panel-group">
@@ -77,18 +85,33 @@
   <script>
     let currentSide = 'front';
     let currentMode = 'desktop';
+    // 将 allFieldData 字段内容同步到隐藏表单
+    function syncFieldsToForm() {
+      const hidden = document.getElementById('hiddenFields');
+      hidden.innerHTML = '';
+      Object.keys(allFieldData).forEach(field => {
+        const ta = document.createElement('textarea');
+        ta.name = field;
+        ta.style.display = 'none';
+        ta.value = allFieldData[field];
+        hidden.appendChild(ta);
+      });
+    }
+    // 修改 setPreviewSide，预览前同步字段内容
     function setPreviewSide(side) {
       currentSide = side;
       document.getElementById('sideInput').value = side;
       document.getElementById('frontBtn').classList.toggle('active', side === 'front');
       document.getElementById('backBtn').classList.toggle('active', side === 'back');
       document.getElementById('ankiForm').action = '/preview/' + side;
+      syncFieldsToForm();
       document.getElementById('ankiForm').submit();
     }
     document.getElementById('frontBtn').onclick = function() { setPreviewSide('front'); };
     document.getElementById('backBtn').onclick = function() { setPreviewSide('back'); };
     document.getElementById('refreshBtn').onclick = function(e) {
       e.preventDefault();
+      syncFieldsToForm();
       document.getElementById('ankiForm').submit();
     };
     // 预览模式切换
@@ -126,69 +149,88 @@
         }
       });
     }
-    // 动态渲染字段输入区
+    // 全局字段内容对象
+    let allFieldData = {};
+    // 动态渲染字段名按钮
     async function renderFields() {
-      // 获取字段列表和已保存内容
       const [fieldsRes, dataRes] = await Promise.all([
         fetch('/scan_fields').then(r => r.json()),
         fetch('/load_fields').then(r => r.json())
       ]);
       const fields = fieldsRes.fields;
-      const data = dataRes;
-      const fieldList = document.getElementById('fieldList');
-      fieldList.innerHTML = '';
+      allFieldData = { ...dataRes };
+      const fieldGrid = document.getElementById('fieldGrid');
+      fieldGrid.innerHTML = '';
       fields.forEach(field => {
-        const li = document.createElement('li');
-        li.className = 'field-item';
-        li.setAttribute('data-field', field);
-        li.innerHTML = `
-          <div class="field-header">
-            <span class="field-label">${field}</span>
-            <span class="field-status"></span>
-          </div>
-          <div class="field-input-wrap">
-            <textarea name="${field}" data-field-input="${field}">${data[field] || ''}</textarea>
-          </div>
-        `;
-        fieldList.appendChild(li);
-      });
-      bindFieldEvents();
-      updateFieldStatus();
-    }
-    // 绑定字段交互事件
-    function bindFieldEvents() {
-      document.querySelectorAll('.field-header').forEach(function(header) {
-        header.onclick = function() {
-          const item = header.parentElement;
-          const isActive = item.classList.contains('active');
-          document.querySelectorAll('.field-item').forEach(i => i.classList.remove('active'));
-          if (!isActive) item.classList.add('active');
-          if (!isActive) setTimeout(() => item.querySelector('textarea').focus(), 100);
-        };
-      });
-      document.querySelectorAll('.field-input-wrap textarea').forEach(function(textarea) {
-        textarea.oninput = function() {
-          updateFieldStatus();
-          saveFormData();
-        };
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'field-btn';
+        btn.textContent = field;
+        btn.dataset.field = field;
+        if (allFieldData[field]) btn.classList.add('filled');
+        btn.onclick = function(e) { showFieldInput(field, btn); };
+        fieldGrid.appendChild(btn);
       });
     }
-    // 扫描字段按钮
-    document.getElementById('scanFieldsBtn').onclick = async function() {
-      await renderFields();
-    };
+    // 悬浮输入框逻辑
+    function showFieldInput(field, btn) {
+      const floatBox = document.getElementById('fieldInputFloat');
+      // 只允许一个浮层
+      if (floatBox.style.display === 'block' && floatBox.dataset.field === field) {
+        floatBox.style.display = 'none';
+        btn.classList.remove('active');
+        return;
+      }
+      document.querySelectorAll('.field-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      floatBox.innerHTML = `
+        <button class="close-btn" onclick="hideFieldInput()">×</button>
+        <label>${field}</label>
+        <textarea id="floatInput" style="resize:vertical;">${allFieldData[field] || ''}</textarea>
+      `;
+      floatBox.style.display = 'block';
+      floatBox.dataset.field = field;
+      // 定位浮层到按钮下方中间
+      const rect = btn.getBoundingClientRect();
+      const floatRect = floatBox.getBoundingClientRect();
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      const scrollLeft = window.scrollX || document.documentElement.scrollLeft;
+      floatBox.style.top = (rect.bottom + scrollTop + 8) + 'px';
+      floatBox.style.left = (rect.left + rect.width / 2 - 200 + scrollLeft) + 'px';
+      // 输入同步
+      const input = document.getElementById('floatInput');
+      input.focus();
+      input.oninput = function() {
+        allFieldData[field] = input.value;
+        btn.classList.toggle('filled', !!input.value.trim());
+      };
+    }
+    function hideFieldInput() {
+      const floatBox = document.getElementById('fieldInputFloat');
+      floatBox.style.display = 'none';
+      document.querySelectorAll('.field-btn').forEach(b => b.classList.remove('active'));
+    }
+    // 点击其他区域关闭浮层
+    document.addEventListener('mousedown', function(e) {
+      const floatBox = document.getElementById('fieldInputFloat');
+      if (floatBox.style.display === 'block') {
+        if (!floatBox.contains(e.target) && !e.target.classList.contains('field-btn')) {
+          hideFieldInput();
+        }
+      }
+    });
     // 保存到服务器按钮
     document.getElementById('saveServerBtn').onclick = async function() {
-      const data = {};
-      document.querySelectorAll('.field-input-wrap textarea').forEach(function(textarea) {
-        data[textarea.name] = textarea.value;
-      });
       await fetch('/save_fields', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
+        body: JSON.stringify(allFieldData)
       });
       alert('已保存到服务器！');
+    };
+    // 扫描字段按钮
+    document.getElementById('scanFieldsBtn').onclick = async function() {
+      await renderFields();
     };
     // 让预览 iframe 高度自适应内容
     function resizePreviewFrame() {
@@ -231,7 +273,7 @@
       setTimeout(() => setPreviewSide(currentSide), 10);
     }
 
-    // 默认加载正面预览和手机模式，并恢复字段内容
+    // 页面加载时渲染字段
     window.onload = async function() {
       await renderFields();
       setPreviewSide('front');
