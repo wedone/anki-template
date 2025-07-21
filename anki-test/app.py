@@ -22,16 +22,26 @@ def index():
 @app.route('/preview/<side>', methods=['POST'])
 def preview(side):
     data = {field: request.form.get(field, '') for field in FIELDS}
-    # 处理 FrontSide 字段（正面内容）
     if side == 'back':
+        # 渲染正面，得到 HTML
         with open(os.path.join(app.template_folder, 'front.html'), encoding='utf-8') as f:
             front_tpl = f.read()
-        data['FrontSide'] = pystache.render(front_tpl, data)
-    # 渲染对应模板
-    tpl_file = 'front.html' if side == 'front' else 'back.html'
-    with open(os.path.join(app.template_folder, tpl_file), encoding='utf-8') as f:
-        tpl = f.read()
-    body = pystache.render(tpl, data)
+        front_html = pystache.render(front_tpl, data)
+        # 用唯一占位符替换 back.html 里的 {{FrontSide}}
+        tpl_file = 'back.html'
+        with open(os.path.join(app.template_folder, tpl_file), encoding='utf-8') as f:
+            tpl = f.read()
+        # 用唯一占位符替换所有 {{FrontSide}} 和 {{{FrontSide}}}
+        placeholder = '__FRONT_SIDE_PLACEHOLDER__'
+        tpl = tpl.replace('{{FrontSide}}', placeholder).replace('{{{FrontSide}}}', placeholder)
+        body = pystache.render(tpl, {**data, 'FrontSide': ''})
+        # 渲染后再替换占位符为 front_html
+        body = body.replace(placeholder, front_html)
+    else:
+        tpl_file = 'front.html'
+        with open(os.path.join(app.template_folder, tpl_file), encoding='utf-8') as f:
+            tpl = f.read()
+        body = pystache.render(tpl, data)
     # 包裹完整 HTML
     html = f'''<!DOCTYPE html>
 <html lang="zh-CN">
