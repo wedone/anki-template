@@ -76,7 +76,7 @@
         <button type="button" class="preview-mode-btn active" id="desktopModeBtn">桌面预览</button>
         <button type="button" class="preview-mode-btn" id="mobileModeBtn">手机预览</button>
       </div>
-      <iframe name="previewFrame" class="preview-frame" id="previewFrame"></iframe>
+      <iframe name="previewFrame" class="preview-frame" id="previewFrame" scrolling="no"></iframe>
     </div>
   </div>
   <script>
@@ -106,9 +106,11 @@
       if (mode === 'mobile') {
         frame.classList.add('mobile');
         panel.classList.add('mobile');
+        resizePreviewFrame(); // 手机模式切换时立即调整高度
       } else {
         frame.classList.remove('mobile');
         panel.classList.remove('mobile');
+        resizePreviewFrame(); // 桌面模式切换时也调整高度
       }
     }
     document.getElementById('desktopModeBtn').onclick = function() { setPreviewMode('desktop'); };
@@ -183,11 +185,11 @@
       setTimeout(() => setPreviewSide(currentSide), 10);
     }
 
-    // 默认加载正面预览和桌面模式，并恢复字段内容
+    // 默认加载正面预览和手机模式，并恢复字段内容
     window.onload = function() {
       loadFormData();
       setPreviewSide('front');
-      setPreviewMode('desktop');
+      setPreviewMode('mobile');
       updateFieldStatus();
     }
   </script>
