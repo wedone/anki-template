@@ -94,6 +94,30 @@
       color: #3498db;
       cursor: pointer;
     }
+    .btn-group, .field-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    .btn, .side-btn, .field-btn {
+      width: 100%;
+      box-sizing: border-box;
+      min-width: 0;
+      margin: 0;
+    }
+    .preview-toolbar {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    .preview-mode-btn {
+      width: 100%;
+      box-sizing: border-box;
+      min-width: 0;
+      margin: 0;
+    }
     @media (max-width: 1100px) {
       .main-flex { flex-direction: column; }
       .form-panel, .preview-panel { padding: 18px 8px; }
@@ -110,9 +134,9 @@
           <button type="button" class="side-btn" id="frontBtn">正面预览</button>
           <button type="button" class="side-btn" id="backBtn">背面预览</button>
           <button class="btn" type="submit" id="refreshBtn">刷新预览</button>
-          <button class="btn" type="button" onclick="clearForm()" style="background:#e74c3c;">清空</button>
+          <button class="btn" type="button" onclick="clearForm()" style="background:#e74c3c;">清空内容</button>
           <button class="btn" type="button" id="scanFieldsBtn" style="background:#27ae60;">扫描字段</button>
-          <button class="btn" type="button" id="saveServerBtn" style="background:#f39c12;">保存到服务器</button>
+          <button class="btn" type="button" id="saveServerBtn" style="background:#f39c12;">保存数据</button>
         </div>
         <input type="hidden" name="side" id="sideInput" value="front">
         <div class="field-grid" id="fieldGrid"></div>
