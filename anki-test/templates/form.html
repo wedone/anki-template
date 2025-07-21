@@ -54,20 +54,12 @@
           <button type="button" class="side-btn" id="backBtn">背面预览</button>
           <button class="btn" type="submit" id="refreshBtn">刷新预览</button>
           <button class="btn" type="button" onclick="clearForm()" style="background:#e74c3c;">清空</button>
+          <button class="btn" type="button" id="scanFieldsBtn" style="background:#27ae60;">扫描字段</button>
+          <button class="btn" type="button" id="saveServerBtn" style="background:#f39c12;">保存到服务器</button>
         </div>
         <input type="hidden" name="side" id="sideInput" value="front">
         <ul class="field-list" id="fieldList">
-        {% for field in data.keys() %}
-          <li class="field-item" data-field="{{ field }}">
-            <div class="field-header">
-              <span class="field-label">{{ field }}</span>
-              <span class="field-status"></span>
-            </div>
-            <div class="field-input-wrap">
-              <textarea name="{{ field }}" data-field-input="{{ field }}">{{ data[field] }}</textarea>
-            </div>
-          </li>
-        {% endfor %}
+          <!-- 字段输入区由JS动态生成 -->
         </ul>
       </form>
     </div>
@@ -131,19 +123,70 @@
         }
       });
     }
-    document.querySelectorAll('.field-header').forEach(function(header) {
-      header.onclick = function() {
-        const item = header.parentElement;
-        const isActive = item.classList.contains('active');
-        document.querySelectorAll('.field-item').forEach(i => i.classList.remove('active'));
-        if (!isActive) item.classList.add('active');
-        // 聚焦输入框
-        if (!isActive) setTimeout(() => item.querySelector('textarea').focus(), 100);
-      };
-    });
-    document.querySelectorAll('.field-input-wrap textarea').forEach(function(textarea) {
-      textarea.oninput = updateFieldStatus;
-    });
+    // 动态渲染字段输入区
+    async function renderFields() {
+      // 获取字段列表和已保存内容
+      const [fieldsRes, dataRes] = await Promise.all([
+        fetch('/scan_fields').then(r => r.json()),
+        fetch('/load_fields').then(r => r.json())
+      ]);
+      const fields = fieldsRes.fields;
+      const data = dataRes;
+      const fieldList = document.getElementById('fieldList');
+      fieldList.innerHTML = '';
+      fields.forEach(field => {
+        const li = document.createElement('li');
+        li.className = 'field-item';
+        li.setAttribute('data-field', field);
+        li.innerHTML = `
+          <div class="field-header">
+            <span class="field-label">${field}</span>
+            <span class="field-status"></span>
+          </div>
+          <div class="field-input-wrap">
+            <textarea name="${field}" data-field-input="${field}">${data[field] || ''}</textarea>
+          </div>
+        `;
+        fieldList.appendChild(li);
+      });
+      bindFieldEvents();
+      updateFieldStatus();
+    }
+    // 绑定字段交互事件
+    function bindFieldEvents() {
+      document.querySelectorAll('.field-header').forEach(function(header) {
+        header.onclick = function() {
+          const item = header.parentElement;
+          const isActive = item.classList.contains('active');
+          document.querySelectorAll('.field-item').forEach(i => i.classList.remove('active'));
+          if (!isActive) item.classList.add('active');
+          if (!isActive) setTimeout(() => item.querySelector('textarea').focus(), 100);
+        };
+      });
+      document.querySelectorAll('.field-input-wrap textarea').forEach(function(textarea) {
+        textarea.oninput = function() {
+          updateFieldStatus();
+          saveFormData();
+        };
+      });
+    }
+    // 扫描字段按钮
+    document.getElementById('scanFieldsBtn').onclick = async function() {
+      await renderFields();
+    };
+    // 保存到服务器按钮
+    document.getElementById('saveServerBtn').onclick = async function() {
+      const data = {};
+      document.querySelectorAll('.field-input-wrap textarea').forEach(function(textarea) {
+        data[textarea.name] = textarea.value;
+      });
+      await fetch('/save_fields', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      alert('已保存到服务器！');
+    };
     // 让预览 iframe 高度自适应内容
     function resizePreviewFrame() {
       const frame = document.getElementById('previewFrame');
@@ -186,8 +229,8 @@
     }
 
     // 默认加载正面预览和手机模式，并恢复字段内容
-    window.onload = function() {
-      loadFormData();
+    window.onload = async function() {
+      await renderFields();
       setPreviewSide('front');
       setPreviewMode('mobile');
       updateFieldStatus();
