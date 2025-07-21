@@ -42,10 +42,58 @@
     .field-btn { background: #f5f6fa; border: 1px solid #bcd; border-radius: 6px; padding: 10px 6px; font-size: 15px; color: #2980b9; cursor: pointer; transition: background 0.2s, color 0.2s, border 0.2s; text-align: center; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
     .field-btn.filled { color: #4caf50; border-color: #4caf50; font-weight: bold; }
     .field-btn.active { background: #e3f2fd; border-color: #3498db; color: #3498db; }
-    .field-input-float { position: absolute; z-index: 100; background: #fff; border: 1.5px solid #3498db; border-radius: 10px; box-shadow: 0 6px 32px #0002; padding: 24px 24px 18px 24px; min-width: 340px; max-width: 420px; display: none; transition: box-shadow 0.2s; }
-    .field-input-float label { font-weight: bold; color: #2980b9; margin-bottom: 12px; display: block; font-size: 18px; }
-    .field-input-float textarea { width: 100%; min-height: 80px; font-size: 16px; border-radius: 6px; border: 1px solid #ccc; padding: 8px 10px; margin-bottom: 10px; }
-    .field-input-float .close-btn { position: absolute; top: 8px; right: 14px; background: none; border: none; font-size: 22px; color: #888; cursor: pointer; }
+    .field-input-float {
+      position: absolute;
+      z-index: 100;
+      background: #fff;
+      border: 1.5px solid #3498db;
+      border-radius: 12px;
+      box-shadow: 0 8px 36px #0002;
+      padding: 32px 0 28px 0;
+      min-width: 520px;
+      max-width: 640px;
+      min-height: 220px;
+      display: none;
+      transition: box-shadow 0.2s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+    }
+    .field-input-float label {
+      font-weight: bold;
+      color: #2980b9;
+      margin-bottom: 18px;
+      display: block;
+      font-size: 22px;
+      text-align: center;
+    }
+    .field-input-float textarea {
+      width: 96%;
+      min-height: 220px;
+      font-size: 18px;
+      border-radius: 8px;
+      border: 1.5px solid #3498db;
+      background: #fafdff;
+      padding: 20px 18px;
+      margin-bottom: 12px;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      box-sizing: border-box;
+      resize: vertical;
+      color: #222;
+    }
+    .field-input-float .close-btn {
+      position: absolute;
+      top: 14px;
+      right: 22px;
+      background: none;
+      border: none;
+      font-size: 26px;
+      color: #3498db;
+      cursor: pointer;
+    }
     @media (max-width: 1100px) {
       .main-flex { flex-direction: column; }
       .form-panel, .preview-panel { padding: 18px 8px; }
@@ -190,13 +238,13 @@
       `;
       floatBox.style.display = 'block';
       floatBox.dataset.field = field;
-      // 定位浮层到按钮下方中间
+      // 定位到按钮下方中间
       const rect = btn.getBoundingClientRect();
-      const floatRect = floatBox.getBoundingClientRect();
+      const floatWidth = 520;
       const scrollTop = window.scrollY || document.documentElement.scrollTop;
       const scrollLeft = window.scrollX || document.documentElement.scrollLeft;
-      floatBox.style.top = (rect.bottom + scrollTop + 8) + 'px';
-      floatBox.style.left = (rect.left + rect.width / 2 - 200 + scrollLeft) + 'px';
+      floatBox.style.top = (rect.bottom + scrollTop + 12) + 'px';
+      floatBox.style.left = (rect.left + rect.width / 2 - floatWidth / 2 + scrollLeft) + 'px';
       // 输入同步
       const input = document.getElementById('floatInput');
       input.focus();
