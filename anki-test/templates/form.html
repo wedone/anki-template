@@ -8,6 +8,8 @@
     body { background: #f5f6fa; }
     .main-flex { display: flex; max-width: 1400px; margin: 30px auto; background: #fff; border-radius: 8px; box-shadow: 0 2px 12px #0001; min-height: 700px; }
     .form-panel { flex: 1 1 0; min-width: 0; border-right: 1px solid #eee; padding: 32px 24px 24px 24px; background: #fafbfc; }
+    .preview-panel-group { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; align-items: stretch; }
+    .preview-toolbar { display: flex; gap: 12px; align-items: center; margin-bottom: 18px; }
     .preview-panel { flex: 1 1 0; min-width: 0; padding: 32px 32px 24px 32px; display: flex; flex-direction: column; align-items: stretch; }
     .form-title { text-align: center; font-size: 22px; font-weight: bold; color: #2980b9; margin-bottom: 18px; }
     .btn-group { display: flex; gap: 12px; margin-bottom: 18px; justify-content: flex-start; align-items: center; }
@@ -16,7 +18,6 @@
     .side-btn:not(.active):hover { background: #e3f2fd; }
     .btn { background: #3498db; color: #fff; border: none; border-radius: 4px; padding: 6px 18px; margin-right: 8px; cursor: pointer; font-size: 16px; }
     .btn:hover { background: #2980b9; }
-    .preview-toolbar { display: flex; gap: 12px; align-items: center; margin-bottom: 18px; }
     .preview-mode-btn { background: #eee; color: #2980b9; border: 1px solid #bcd; border-radius: 4px; padding: 6px 18px; font-size: 16px; cursor: pointer; transition: background 0.2s, color 0.2s; }
     .preview-mode-btn.active, .preview-mode-btn:active { background: #3498db; color: #fff; border-color: #2980b9; }
     .preview-mode-btn:not(.active):hover { background: #e3f2fd; }
@@ -45,9 +46,9 @@
   </style>
 </head>
 <body>
+  <div class="form-title">Anki 数学问答模板预览</div>
   <div class="main-flex">
     <div class="form-panel">
-      <div class="form-title">Anki 数学问答模板预览</div>
       <form id="ankiForm" method="post" target="previewFrame" autocomplete="off">
         <div class="btn-group">
           <button type="button" class="side-btn" id="frontBtn">正面预览</button>
@@ -63,12 +64,14 @@
         </ul>
       </form>
     </div>
-    <div class="preview-panel" id="previewPanel">
+    <div class="preview-panel-group">
       <div class="preview-toolbar">
         <button type="button" class="preview-mode-btn active" id="desktopModeBtn">桌面预览</button>
         <button type="button" class="preview-mode-btn" id="mobileModeBtn">手机预览</button>
       </div>
-      <iframe name="previewFrame" class="preview-frame" id="previewFrame" scrolling="no"></iframe>
+      <div class="preview-panel" id="previewPanel">
+        <iframe name="previewFrame" class="preview-frame" id="previewFrame" scrolling="no"></iframe>
+      </div>
     </div>
   </div>
   <script>
