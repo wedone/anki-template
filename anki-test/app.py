@@ -26,6 +26,8 @@ def scan_template_fields(tpl_name):
                 content = f.read()
             for m in field_pattern.finditer(content):
                 field = m.group(1)
+                if field == 'FrontSide':
+                    continue
                 if field not in seen:
                     ordered_fields.append(field)
                     seen.add(field)

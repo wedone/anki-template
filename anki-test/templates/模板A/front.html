@@ -5,3 +5,16 @@
   <div class="hint">提示：{{错误提示}}</div>
   {{/错误提示}}
 </div>
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']]
+  },
+  options: { enableMenu: false }
+};
+setTimeout(function() {
+  if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise();
+}, 50);
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
