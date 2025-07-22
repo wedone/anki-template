@@ -1,0 +1,75 @@
+/* 全局样式 */
+.card {
+  font-family: "Microsoft YaHei", sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #333;
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+/* 正面样式 */
+.front-container, .back-container {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.title {
+  font-size: 18px;
+  font-weight: bold;
+  color: #2c3e50;
+  margin-bottom: 15px;
+  padding-bottom: 5px;
+  border-bottom: 2px solid #3498db;
+}
+
+.question {
+  font-size: 17px;
+  padding: 15px;
+  background-color: white;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  margin-bottom: 10px;
+}
+
+.hint {
+  font-size: 14px;
+  color: #7f8c8d;
+  font-style: italic;
+  text-align: right;
+  margin-top: 5px;
+}
+
+/* 背面样式 */
+.question-back {
+  font-size: 15px;
+  color: #666;
+  margin-bottom: 15px;
+  padding: 8px;
+  background-color: #f0f7ff;
+  border-left: 3px solid #3498db;
+}
+
+.section {
+  margin-bottom: 15px;
+}
+
+.section-title {
+  font-weight: bold;
+  color: #e74c3c;
+  margin-bottom: 5px;
+  font-size: 16px;
+}
+
+.content {
+  padding: 10px;
+  background-color: white;
+  border-radius: 5px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.highlight .content {
+  background-color: #fff8e1;
+  border-left: 3px solid #f39c12;
+}

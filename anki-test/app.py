@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, send_from_directory
+from flask import Flask, render_template, request, send_from_directory, jsonify
 import os
 import pystache
 import re
@@ -6,13 +6,30 @@ import json
 
 app = Flask(__name__)
 
-# 字段列表（可根据模板实际字段扩展）
-FIELDS = [
-    'Question', 'Answer', 'Diff', 'tag', 'Hint', 'Image', '来源', 'Example', 'Concept', 'Formula', 'Mistakes',
-] + [f'Answer-{i}' for i in range(1, 21)]
+TEMPLATE_BASE = os.path.join(app.root_path, 'templates')
 
-TEMPLATE_FILES = ['front.html', 'back.html']
-FIELDS_DATA_FILE = 'fields_data.json'
+def get_template_dirs():
+    return [
+        d for d in os.listdir(TEMPLATE_BASE)
+        if os.path.isdir(os.path.join(TEMPLATE_BASE, d)) and
+           all(os.path.exists(os.path.join(TEMPLATE_BASE, d, f)) for f in ['front.html', 'back.html', 'style.css', 'fields_data.json'])
+    ]
+
+def scan_template_fields(tpl_name):
+    field_pattern = re.compile(r'\{\{[#\{]?\s*([\w\-]+)\s*\}?\}\}')
+    seen = set()
+    ordered_fields = []
+    for fname in ['front.html', 'back.html']:
+        path = os.path.join(TEMPLATE_BASE, tpl_name, fname)
+        if os.path.exists(path):
+            with open(path, encoding='utf-8') as f:
+                content = f.read()
+            for m in field_pattern.finditer(content):
+                field = m.group(1)
+                if field not in seen:
+                    ordered_fields.append(field)
+                    seen.add(field)
+    return ordered_fields
 
 def render_with_safe_fields(tpl, data):
     placeholders = {}
@@ -29,94 +46,71 @@ def render_with_safe_fields(tpl, data):
         rendered = rendered.replace(ph, v)
     return rendered
 
-def scan_template_fields():
-    field_pattern = re.compile(r'\{\{[#\{]?\s*([\w\-]+)\s*\}?\}\}')
-    seen = set()
-    ordered_fields = []
-    # 先扫描 front.html
-    for fname in TEMPLATE_FILES:
-        path = os.path.join(app.template_folder, fname)
-        if os.path.exists(path):
-            with open(path, encoding='utf-8') as f:
-                content = f.read()
-            for m in field_pattern.finditer(content):
-                field = m.group(1)
-                if field not in seen:
-                    ordered_fields.append(field)
-                    seen.add(field)
-    return ordered_fields
-
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/')
 def index():
-    data = {field: '' for field in FIELDS}
-    side = request.args.get('side', 'front')
-    if request.method == 'POST':
-        for field in FIELDS:
-            data[field] = request.form.get(field, '')
-        side = request.form.get('side', 'front')
-    return render_template('form.html', data=data, side=side)
+    return render_template('form.html')
 
-@app.route('/preview/<side>', methods=['POST'])
-def preview(side):
-    data = {field: request.form.get(field, '') for field in FIELDS}
-    if side == 'back':
-        with open(os.path.join(app.template_folder, 'front.html'), encoding='utf-8') as f:
-            front_tpl = f.read()
-        front_html = render_with_safe_fields(front_tpl, data)
-        tpl_file = 'back.html'
-        with open(os.path.join(app.template_folder, tpl_file), encoding='utf-8') as f:
-            tpl = f.read()
-        placeholder = '__FRONT_SIDE_PLACEHOLDER__'
-        tpl = tpl.replace('{{FrontSide}}', placeholder).replace('{{{FrontSide}}}', placeholder)
-        body = render_with_safe_fields(tpl, {**data, 'FrontSide': ''})
-        body = body.replace(placeholder, front_html)
-    else:
-        tpl_file = 'front.html'
-        with open(os.path.join(app.template_folder, tpl_file), encoding='utf-8') as f:
-            tpl = f.read()
-        body = render_with_safe_fields(tpl, data)
-    html = f'''<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-  <meta charset="UTF-8">
-  <link rel="stylesheet" href="/templates/style.css">
-</head>
-<body>
-{body}
-</body>
-</html>'''
-    return html
+@app.route('/template_list')
+def template_list():
+    return jsonify({'templates': get_template_dirs()})
 
-@app.route('/scan_fields', methods=['GET'])
+@app.route('/scan_fields')
 def scan_fields():
-    fields = scan_template_fields()
-    return {'fields': fields}
+    tpl = request.args.get('tpl')
+    if not tpl:
+        return jsonify({'fields': []})
+    fields = scan_template_fields(tpl)
+    return jsonify({'fields': fields})
+
+@app.route('/load_fields')
+def load_fields():
+    tpl = request.args.get('tpl')
+    if not tpl:
+        return jsonify({})
+    fields_path = os.path.join(TEMPLATE_BASE, tpl, 'fields_data.json')
+    if os.path.exists(fields_path):
+        with open(fields_path, encoding='utf-8') as f:
+            data = json.load(f)
+        return jsonify(data)
+    return jsonify({})
 
 @app.route('/save_fields', methods=['POST'])
 def save_fields():
+    tpl = request.args.get('tpl')
+    if not tpl:
+        return jsonify({'status': 'fail', 'msg': 'no tpl'})
+    fields_path = os.path.join(TEMPLATE_BASE, tpl, 'fields_data.json')
     data = request.json
-    with open(FIELDS_DATA_FILE, 'w', encoding='utf-8') as f:
+    with open(fields_path, 'w', encoding='utf-8') as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
-    return {'status': 'ok'}
+    return jsonify({'status': 'ok'})
 
-@app.route('/load_fields', methods=['GET'])
-def load_fields():
-    if os.path.exists(FIELDS_DATA_FILE):
-        with open(FIELDS_DATA_FILE, encoding='utf-8') as f:
-            data = json.load(f)
+@app.route('/preview/<side>', methods=['POST'])
+def preview(side):
+    tpl = request.args.get('tpl')
+    if not tpl:
+        return 'No template selected', 400
+    data = request.form.to_dict()
+    if side == 'back':
+        with open(os.path.join(TEMPLATE_BASE, tpl, 'front.html'), encoding='utf-8') as f:
+            front_tpl = f.read()
+        front_html = render_with_safe_fields(front_tpl, data)
+        with open(os.path.join(TEMPLATE_BASE, tpl, 'back.html'), encoding='utf-8') as f:
+            tpl_content = f.read()
+        placeholder = '__FRONT_SIDE_PLACEHOLDER__'
+        tpl_content = tpl_content.replace('{{FrontSide}}', placeholder).replace('{{{FrontSide}}}', placeholder)
+        body = render_with_safe_fields(tpl_content, {**data, 'FrontSide': ''})
+        body = body.replace(placeholder, front_html)
     else:
-        data = {}
-    return data
+        with open(os.path.join(TEMPLATE_BASE, tpl, 'front.html'), encoding='utf-8') as f:
+            tpl_content = f.read()
+        body = render_with_safe_fields(tpl_content, data)
+    html = f'''<!DOCTYPE html>\n<html lang="zh-CN">\n<head>\n  <meta charset="UTF-8">\n  <link rel="stylesheet" href="/templates/{tpl}/style.css">\n</head>\n<body>\n{body}\n</body>\n</html>'''
+    return html
 
-# 静态文件（字体等）
-@app.route('/static/<path:filename>')
-def static_files(filename):
-    return send_from_directory(os.path.join(app.root_path, 'static'), filename)
-
-# 新增：允许访问 templates/style.css 作为静态文件
-@app.route('/templates/<path:filename>')
-def templates_static_files(filename):
-    return send_from_directory(os.path.join(app.root_path, 'templates'), filename)
+@app.route('/templates/<tpl>/<filename>')
+def templates_static_files(tpl, filename):
+    return send_from_directory(os.path.join(TEMPLATE_BASE, tpl), filename)
 
 if __name__ == '__main__':
     app.run(debug=True) 

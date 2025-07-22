@@ -166,6 +166,10 @@
   <div class="form-title">Anki 数学问答模板预览</div>
   <div class="main-flex">
     <div class="form-panel">
+      <div style="margin-bottom: 12px;">
+        <label for="templateSelect" style="font-weight:bold;color:#2980b9;">选择模板：</label>
+        <select id="templateSelect"></select>
+      </div>
       <form id="ankiForm" method="post" target="previewFrame" autocomplete="off">
         <div class="btn-group">
           <button type="button" class="side-btn" id="frontBtn">正面预览</button>
@@ -195,89 +199,39 @@
     </div>
   </div>
   <script>
+    let currentTemplate = '';
     let currentSide = 'front';
     let currentMode = 'desktop';
-    // 将 allFieldData 字段内容同步到隐藏表单
-    function syncFieldsToForm() {
-      const hidden = document.getElementById('hiddenFields');
-      hidden.innerHTML = '';
-      Object.keys(allFieldData).forEach(field => {
-        const ta = document.createElement('textarea');
-        ta.name = field;
-        ta.style.display = 'none';
-        ta.value = allFieldData[field];
-        hidden.appendChild(ta);
-      });
-    }
-    // 修改 setPreviewSide，预览前同步字段内容
-    function setPreviewSide(side) {
-      currentSide = side;
-      document.getElementById('sideInput').value = side;
-      document.getElementById('frontBtn').classList.toggle('active', side === 'front');
-      document.getElementById('backBtn').classList.toggle('active', side === 'back');
-      document.getElementById('ankiForm').action = '/preview/' + side;
-      syncFieldsToForm();
-      document.getElementById('ankiForm').submit();
-    }
-    document.getElementById('frontBtn').onclick = function() { setPreviewSide('front'); };
-    document.getElementById('backBtn').onclick = function() { setPreviewSide('back'); };
-    document.getElementById('refreshBtn').onclick = function(e) {
-      e.preventDefault();
-      syncFieldsToForm();
-      document.getElementById('ankiForm').submit();
-    };
-    // 预览模式切换
-    function setPreviewMode(mode) {
-      currentMode = mode;
-      const frame = document.getElementById('previewFrame');
-      const panel = document.getElementById('previewPanel');
-      // 根据 mode 更新开关状态
-      document.getElementById('previewToggle').checked = (mode === 'mobile');
-      if (mode === 'mobile') {
-        frame.classList.add('mobile');
-        panel.classList.add('mobile');
-        resizePreviewFrame(); // 手机模式切换时立即调整高度
-      } else {
-        frame.classList.remove('mobile');
-        panel.classList.remove('mobile');
-        resizePreviewFrame(); // 桌面模式切换时也调整高度
-      }
-    }
-    // 预览模式切换（开关）
-    const previewToggle = document.getElementById('previewToggle');
-    function setPreviewModeByToggle() {
-      if (previewToggle.checked) {
-        setPreviewMode('mobile');
-      } else {
-        setPreviewMode('desktop');
-      }
-    }
-    previewToggle.addEventListener('change', setPreviewModeByToggle);
-    // 默认开（手机预览）
-    setPreviewMode('mobile');
-    // 字段交互
-    function updateFieldStatus() {
-      document.querySelectorAll('.field-item').forEach(function(item) {
-        const field = item.getAttribute('data-field');
-        const textarea = item.querySelector('textarea');
-        const status = item.querySelector('.field-status');
-        let val = textarea.value.trim();
-        if (val) {
-          item.classList.add('filled');
-          status.innerHTML = '<span class="field-dot"></span>' + (val.length > 20 ? val.slice(0, 20) + '...' : val);
-        } else {
-          item.classList.remove('filled');
-          status.textContent = '未填写';
-        }
-      });
-    }
-    // 全局字段内容对象
     let allFieldData = {};
-    // 动态渲染字段名按钮
+
+    async function loadTemplateList() {
+      const res = await fetch('/template_list');
+      const data = await res.json();
+      const select = document.getElementById('templateSelect');
+      select.innerHTML = '';
+      data.templates.forEach(tpl => {
+        const opt = document.createElement('option');
+        opt.value = tpl;
+        opt.textContent = tpl;
+        select.appendChild(opt);
+      });
+      if (data.templates.length > 0) {
+        currentTemplate = data.templates[0];
+        select.value = currentTemplate;
+      }
+    }
+
+    document.getElementById('templateSelect').addEventListener('change', async function() {
+      currentTemplate = this.value;
+      await renderFields();
+      setPreviewSide(currentSide);
+    });
+
     async function renderFields() {
+      if (!currentTemplate) return;
       const [fieldsRes, dataRes] = await Promise.all([
-        fetch('/scan_fields').then(r => r.json()),
-        fetch('/load_fields').then(r => r.json())
+        fetch(`/scan_fields?tpl=${currentTemplate}`).then(r => r.json()),
+        fetch(`/load_fields?tpl=${currentTemplate}`).then(r => r.json())
       ]);
       const fields = fieldsRes.fields;
       allFieldData = { ...dataRes };
@@ -294,10 +248,80 @@
         fieldGrid.appendChild(btn);
       });
     }
+
+    function syncFieldsToForm() {
+      const hidden = document.getElementById('hiddenFields');
+      hidden.innerHTML = '';
+      Object.keys(allFieldData).forEach(field => {
+        const ta = document.createElement('textarea');
+        ta.name = field;
+        ta.style.display = 'none';
+        ta.value = allFieldData[field];
+        hidden.appendChild(ta);
+      });
+    }
+
+    function setPreviewSide(side) {
+      currentSide = side;
+      document.getElementById('sideInput').value = side;
+      document.getElementById('frontBtn').classList.toggle('active', side === 'front');
+      document.getElementById('backBtn').classList.toggle('active', side === 'back');
+      document.getElementById('ankiForm').action = `/preview/${side}?tpl=${currentTemplate}`;
+      syncFieldsToForm();
+      document.getElementById('ankiForm').submit();
+    }
+
+    document.getElementById('frontBtn').onclick = function() { setPreviewSide('front'); };
+    document.getElementById('backBtn').onclick = function() { setPreviewSide('back'); };
+    document.getElementById('refreshBtn').onclick = function(e) {
+      e.preventDefault();
+      syncFieldsToForm();
+      document.getElementById('ankiForm').submit();
+    };
+
+    // 预览模式切换
+    function setPreviewMode(mode) {
+      currentMode = mode;
+      const frame = document.getElementById('previewFrame');
+      const panel = document.getElementById('previewPanel');
+      document.getElementById('previewToggle').checked = (mode === 'mobile');
+      if (mode === 'mobile') {
+        frame.classList.add('mobile');
+        panel.classList.add('mobile');
+        resizePreviewFrame();
+      } else {
+        frame.classList.remove('mobile');
+        panel.classList.remove('mobile');
+        resizePreviewFrame();
+      }
+    }
+    const previewToggle = document.getElementById('previewToggle');
+    function setPreviewModeByToggle() {
+      if (previewToggle.checked) {
+        setPreviewMode('mobile');
+      } else {
+        setPreviewMode('desktop');
+      }
+    }
+    previewToggle.addEventListener('change', setPreviewModeByToggle);
+    setPreviewMode('mobile');
+
+    // 保存到服务器按钮
+    document.getElementById('saveServerBtn').onclick = async function() {
+      await fetch(`/save_fields?tpl=${currentTemplate}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(allFieldData)
+      });
+      alert('已保存到服务器！');
+    };
+    document.getElementById('scanFieldsBtn').onclick = async function() {
+      await renderFields();
+    };
+
     // 悬浮输入框逻辑
     function showFieldInput(field, btn) {
       const floatBox = document.getElementById('fieldInputFloat');
-      // 只允许一个浮层
       if (floatBox.style.display === 'block' && floatBox.dataset.field === field) {
         floatBox.style.display = 'none';
         btn.classList.remove('active');
@@ -312,14 +336,12 @@
       `;
       floatBox.style.display = 'block';
       floatBox.dataset.field = field;
-      // 定位到按钮下方中间
       const rect = btn.getBoundingClientRect();
       const floatWidth = 520;
       const scrollTop = window.scrollY || document.documentElement.scrollTop;
       const scrollLeft = window.scrollX || document.documentElement.scrollLeft;
       floatBox.style.top = (rect.bottom + scrollTop + 12) + 'px';
       floatBox.style.left = (rect.left + rect.width / 2 - floatWidth / 2 + scrollLeft) + 'px';
-      // 输入同步
       const input = document.getElementById('floatInput');
       input.focus();
       input.oninput = function() {
@@ -332,7 +354,6 @@
       floatBox.style.display = 'none';
       document.querySelectorAll('.field-btn').forEach(b => b.classList.remove('active'));
     }
-    // 点击其他区域关闭浮层
     document.addEventListener('mousedown', function(e) {
       const floatBox = document.getElementById('fieldInputFloat');
       if (floatBox.style.display === 'block') {
@@ -341,19 +362,7 @@
         }
       }
     });
-    // 保存到服务器按钮
-    document.getElementById('saveServerBtn').onclick = async function() {
-      await fetch('/save_fields', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(allFieldData)
-      });
-      alert('已保存到服务器！');
-    };
-    // 扫描字段按钮
-    document.getElementById('scanFieldsBtn').onclick = async function() {
-      await renderFields();
-    };
+
     // 让预览 iframe 高度自适应内容
     function resizePreviewFrame() {
       const frame = document.getElementById('previewFrame');
@@ -365,41 +374,39 @@
     }
     document.getElementById('previewFrame').addEventListener('load', resizePreviewFrame);
 
-    // 字段输入内容自动保存/恢复
-    const STORAGE_KEY = 'ankiFormData';
-    function saveFormData() {
-      const data = {};
-      document.querySelectorAll('.field-input-wrap textarea').forEach(function(textarea) {
-        data[textarea.name] = textarea.value;
-      });
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-    }
-    function loadFormData() {
-      const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-      document.querySelectorAll('.field-input-wrap textarea').forEach(function(textarea) {
-        if (data.hasOwnProperty(textarea.name)) {
-          textarea.value = data[textarea.name];
-        }
-      });
-    }
-    document.querySelectorAll('.field-input-wrap textarea').forEach(function(textarea) {
-      textarea.addEventListener('input', saveFormData);
-    });
-
     // 清空按钮也清除 localStorage
     function clearForm() {
       var t = document.querySelectorAll('.form-panel textarea');
       t.forEach(e => e.value = '');
-      localStorage.removeItem(STORAGE_KEY);
+      allFieldData = {};
       updateFieldStatus();
       setTimeout(() => setPreviewSide(currentSide), 10);
     }
 
-    // 页面加载时渲染字段
+    // 字段输入内容自动保存/恢复（可选：可按模板名区分localStorage）
+    // ...如需实现可补充...
+
+    // 字段按钮状态
+    function updateFieldStatus() {
+      document.querySelectorAll('.field-btn').forEach(function(item) {
+        const field = item.getAttribute('data-field');
+        const status = item.querySelector('.field-status');
+        let val = allFieldData[field] ? allFieldData[field].trim() : '';
+        if (val) {
+          item.classList.add('filled');
+          if (status) status.innerHTML = '<span class="field-dot"></span>' + (val.length > 20 ? val.slice(0, 20) + '...' : val);
+        } else {
+          item.classList.remove('filled');
+          if (status) status.textContent = '未填写';
+        }
+      });
+    }
+
+    // 页面加载时
     window.onload = async function() {
+      await loadTemplateList();
       await renderFields();
       setPreviewSide('front');
-      // setPreviewMode('mobile'); // This line is now handled by the toggle
       updateFieldStatus();
     }
   </script>
