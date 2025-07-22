@@ -123,6 +123,43 @@
       .form-panel, .preview-panel { padding: 18px 8px; }
       .form-panel { border-right: none; border-bottom: 1px solid #eee; }
     }
+    .ios-switch {
+      position: relative;
+      display: inline-block;
+      width: 44px;
+      height: 26px;
+    }
+    .ios-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .ios-switch .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #ccc;
+      transition: .4s;
+      border-radius: 26px;
+    }
+    .ios-switch .slider:before {
+      position: absolute;
+      content: "";
+      height: 20px;
+      width: 20px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+      box-shadow: 0 1px 3px #0002;
+    }
+    .ios-switch input:checked + .slider {
+      background-color: #4cd964;
+    }
+    .ios-switch input:checked + .slider:before {
+      transform: translateX(18px);
+    }
   </style>
 </head>
 <body>
@@ -146,9 +183,12 @@
     </div>
     <div class="preview-panel-group">
       <div class="preview-panel" id="previewPanel">
-        <div class="btn-group" style="margin-bottom: 18px;">
-          <button type="button" class="side-btn active" id="desktopModeBtn">桌面预览</button>
-          <button type="button" class="side-btn" id="mobileModeBtn">手机预览</button>
+        <div style="margin-bottom: 18px; display: flex; align-items: center; gap: 12px; min-width: 120px;">
+          <label for="previewToggle" style="font-weight:bold;color:#2980b9;">手机预览</label>
+          <label class="ios-switch">
+            <input type="checkbox" id="previewToggle" checked>
+            <span class="slider"></span>
+          </label>
         </div>
         <iframe name="previewFrame" class="preview-frame" id="previewFrame" scrolling="no"></iframe>
       </div>
@@ -191,8 +231,8 @@
       currentMode = mode;
       const frame = document.getElementById('previewFrame');
       const panel = document.getElementById('previewPanel');
-      document.getElementById('desktopModeBtn').classList.toggle('active', mode === 'desktop');
-      document.getElementById('mobileModeBtn').classList.toggle('active', mode === 'mobile');
+      // 根据 mode 更新开关状态
+      document.getElementById('previewToggle').checked = (mode === 'mobile');
       if (mode === 'mobile') {
         frame.classList.add('mobile');
         panel.classList.add('mobile');
@@ -203,8 +243,18 @@
         resizePreviewFrame(); // 桌面模式切换时也调整高度
       }
     }
-    document.getElementById('desktopModeBtn').onclick = function() { setPreviewMode('desktop'); };
-    document.getElementById('mobileModeBtn').onclick = function() { setPreviewMode('mobile'); };
+    // 预览模式切换（开关）
+    const previewToggle = document.getElementById('previewToggle');
+    function setPreviewModeByToggle() {
+      if (previewToggle.checked) {
+        setPreviewMode('mobile');
+      } else {
+        setPreviewMode('desktop');
+      }
+    }
+    previewToggle.addEventListener('change', setPreviewModeByToggle);
+    // 默认开（手机预览）
+    setPreviewMode('mobile');
     // 字段交互
     function updateFieldStatus() {
       document.querySelectorAll('.field-item').forEach(function(item) {
@@ -349,7 +399,7 @@
     window.onload = async function() {
       await renderFields();
       setPreviewSide('front');
-      setPreviewMode('mobile');
+      // setPreviewMode('mobile'); // This line is now handled by the toggle
       updateFieldStatus();
     }
   </script>
