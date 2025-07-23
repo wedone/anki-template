@@ -83,7 +83,7 @@
   font-size: calc(var(--base-font-size) * 0.75);
 }
 
-.diff-badge {
+.badge {
   background: var(--modal-bg);
   border: 1px solid var(--modal-border);
   border-radius: 4px;
@@ -94,14 +94,7 @@
   gap: 2px;
 }
 
-.tag-badge {
-  background: var(--tag-bg);
-  border: 1px solid var(--tag-border);
-  border-radius: 4px;
-  padding: 1px 6px;
-  color: var(--success);
-  font-weight: 500;
-}
+
 
 .source-info {
   font-size: calc(var(--base-font-size) * 0.85);
@@ -118,33 +111,12 @@
   color: var(--primary);
 }
 
-.diff-level {
-  color: var(--danger);
-  font-weight: bold;
-}
-
-.settings-button {
-  background: var(--settings-btn-bg);
-  color: #333;
-  border: 1px solid var(--settings-btn-border);
-  border-radius: 4px;
-  padding: 1px 4px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 2px;
-  transition: background-color 0.2s, border-color 0.2s;
-}
 
 .settings-button:hover {
   background: var(--settings-btn-bg-hover);
   border-color: var(--settings-btn-border-hover);
 }
 
-.settings-icon {
-  font-size: calc(var(--base-font-size) * 0.75);
-  color: var(--muted);
-}
 
 .hint {
   margin-top: 10px;
@@ -431,10 +403,3 @@
     margin-bottom: 6px;
   }
   
-  .tag-badge {
-    max-width: 100px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-} 

@@ -3,10 +3,79 @@
     {{Question}}
   </div>
   <div class="question-bottom">
-    <div class="diff-badge small-text">难度：{{Diff}}</div>
-    <div class="diff-badge small-text">⚙️设置</div>
+    {{#Diff}}
+    <div class="badge small-text">难度:
+      <span style="color: #e74c3c;" id="diffDisplay">{{Diff}}</span>
+    </div>
+    {{/Diff}}
+    <div class="badge small-text" onclick="SettingsModal()" style="cursor: pointer;">⚙️设置</div>
+  </div>
+
+
+
+  <!-- 设置弹窗 -->
+  <div id="settingsModal" class="settings-modal">
+    <div class="settings-modal-content" style="width:320px;max-width:90%;top:24px;position:absolute;left:50%;transform:translateX(-50%);">
+      <div class="settings-modal-header" style="padding-bottom:8px;">
+        <h3 style="font-size:18px;margin:0;">卡片设置</h3>
+        <span class="close-button" onclick="SettingsModal()">&times;</span>
+      </div>
+      <div class="settings-modal-body" style="padding:12px;">
+        <div class="setting" style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">
+          <label style="white-space:nowrap;width:80px;">字体大小</label>
+          <input type="range" min="12" max="24" value="18" id="fontSizeSlider" style="width:180px;">
+          <span id="fontSizeValue" style="width:40px;text-align:right;">18px</span>
+        </div>
+        <div class="setting" style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">
+          <label style="white-space:nowrap;width:80px;">行间距</label>
+          <input type="range" min="13" max="20" value="15" id="lineHeightSlider" style="width:180px;">
+          <span id="lineHeightValue" style="width:40px;text-align:right;">1.5</span>
+        </div>
+        <button onclick="applyDefaultSettings()" style="margin-top:8px;">恢复默认</button>
+      </div>
+    </div>
   </div>
 </div>
+<!-- 设置弹窗结束 -->
+
+
+
+
+<script>
+  // 设置弹窗
+  function SettingsModal() {
+    const modal = document.getElementById('settingsModal');
+    if (modal.classList.contains('show')) {
+      modal.classList.remove('show');
+    } else {
+      modal.classList.add('show');
+      // 加载当前设置到滑块
+      document.getElementById('fontSizeSlider').value = window.frontSettings.fontSize;
+      document.getElementById('lineHeightSlider').value = window.frontSettings.lineHeight * 10;
+    }
+  }
+
+  // 更新难度显示
+  function updateDiffStars() {
+    const display = document.getElementById('diffDisplay');
+    if (display) {
+      const level = parseInt(display.textContent);
+      let stars = '';
+      switch(level) {
+        case 1: stars = '★☆☆☆☆'; break;
+        case 2: stars = '★★☆☆☆'; break;
+        case 3: stars = '★★★☆☆'; break;
+        case 4: stars = '★★★★☆'; break;
+        case 5: stars = '★★★★★'; break;
+        default: stars = level;
+      }
+      display.textContent = stars;
+    }
+  }
+
+  // 页面加载后更新难度显示
+  updateDiffStars();
+</script>
 
 <script>
   MathJax = {

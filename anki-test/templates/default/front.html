@@ -12,9 +12,9 @@
     
     <div class="card-footer">
       {{#Diff}}
-      <div class="diff-badge small-text">
+      <div class="badge small-text">
         难度: 
-        <span class="diff-level" id="diffDisplay">
+        <span style="color: #e74c3c;" id="diffDisplay">
           {{Diff}}
         </span>
       </div>
@@ -22,13 +22,12 @@
       
       <!-- 标签显示 -->
       {{#tag}}
-      <div class="tag-badge small-text">
-        <span class="settings-icon">🏷️</span> {{tag}}
+      <div class="badge small-text">🏷️: {{tag}}
       </div>
       {{/tag}}
       
-      <div class="settings-button small-text" id="settingsButton" onclick="toggleSettingsModal()">
-        <span class="settings-icon">⚙️</span> 设置
+      <div id="settingsButton" onclick="toggleSettingsModal()">
+        <span class="badge small-text" style="cursor: pointer;">⚙️ 设置</span>
       </div>
     </div>
     

@@ -44,7 +44,7 @@
   margin: 12px 2px 0 2px;
   gap: 16px;
 }
-.diff-badge {
+.badge {
   background: #f8f9fa;
   border: 1px solid #dee2e6;
   border-radius: 4px;
@@ -72,4 +72,54 @@
   padding: 4px 4px;
   min-width: 80px;
   text-align: right;
+}
+.settings-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+  font-family: "Segoe UI", "Noto Sans", system-ui, sans-serif !important;
+  font-size: 14px !important;
+  line-height: 1.4 !important;
+}
+
+
+.settings-modal.show {
+  display: flex;
+}
+
+.settings-modal-content {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  font-family: "Segoe UI", "Noto Sans", system-ui, sans-serif !important;
+  font-size: 14px !important;
+  line-height: 1.4 !important;
+}
+
+.settings-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #dee2e6;
+  font-family: "Segoe UI", "Noto Sans", system-ui, sans-serif !important;
+  font-size: 14px !important;
+  line-height: 1.4 !important;
+}
+
+.settings-modal-header h3 {
+  margin: 0;
+  font-size: 18px !important;
+  color: #333;
+  font-family: "Segoe UI", "Noto Sans", system-ui, sans-serif !important;
+  line-height: 1.4 !important;
 }
