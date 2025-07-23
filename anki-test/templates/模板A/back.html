@@ -1,27 +1,33 @@
+{{FrontSide}}
 <div class="back-container">
-  {{FrontSide}}
+
   
   <!-- 正确解法 -->
+  {{#正确解法}}
   <div class="section">
     <div class="section-title">正确解法</div>
     <div class="content">{{正确解法}}</div>
   </div>
-  
+  {{/正确解法}}
   <!-- 错误原因 -->
+  {{#错误原因}}   
   <div class="section">
     <div class="section-title">错误原因</div>
     <div class="content">{{错误原因}}</div>
   </div>
-  
+  {{/错误原因}}
   <!-- 关联知识点 -->
+  {{#关联知识}}
   <div class="section">
     <div class="section-title">关联公式/定理</div>
     <div class="content">{{关联知识}}</div>
   </div>
-  
+  {{/关联知识}}
   <!-- 避坑指南 -->
+  {{#避坑指南}}
   <div class="section highlight">
     <div class="section-title">避坑指南</div>
     <div class="content">{{避坑指南}}</div>
   </div>
+  {{/避坑指南}}
 </div>

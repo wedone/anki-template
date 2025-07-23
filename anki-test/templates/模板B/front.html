@@ -1,0 +1,32 @@
+<div class="front-container">
+  <div class="question">
+    {{Question}}
+  </div>
+  <div class="question-bottom">
+    <div class="diff-badge small-text">难度：{{Diff}}</div>
+    <div class="diff-badge small-text">⚙️设置</div>
+  </div>
+</div>
+
+<script>
+  MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$', '$$'], ['\\[', '\\]']]
+    },
+    options: {
+      enableMenu: false
+    }
+  };
+  
+  // 初始化函数：渲染公式
+  function renderMath() {
+    if (window.MathJax && MathJax.typesetPromise) {
+      MathJax.typesetPromise().catch(console.error);
+    }
+  }
+  
+  // 页面加载后渲染公式
+  setTimeout(renderMath, 50);
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
