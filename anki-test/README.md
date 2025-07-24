@@ -10,12 +10,23 @@
 anki-test/
 ├── app.py              # Flask 主程序
 ├── static/             # 静态资源目录
-│   ├── back.html       # Anki 卡片背面模板（Mustache语法）
-│   ├── front.html      # Anki 卡片正面模板（Mustache语法）
-│   ├── style.css       # 卡片样式
-│   └── ...             # 字体等资源
-├── templates/
-│   └── form.html       # 字段输入与预览主页面
+│   ├── form.html       # 字段输入与预览主页面（已拆分到 templates/）
+│   ├── form.js         # 前端主逻辑脚本
+│   ├── form.css        # 主页面样式
+│   ├── _MiSans.ttf     # 字体文件（如有）
+│   ├── _times.ttf      # 字体文件（如有）
+│   └── ...             # 其它静态资源
+├── templates/          # Anki模板目录（每个子文件夹为一个模板）
+│   ├── form.html       # 主页面模板
+│   ├── 模板A/
+│   │   ├── front.html      # 正面模板
+│   │   ├── back.html       # 背面模板
+│   │   ├── style.css       # 卡片样式
+│   │   └── fields_data.json# 字段数据（可选）
+│   ├── 模板B/
+│   │   └── ...
+│   └── default/
+│       └── ...
 └── README.md           # 本说明文档
 ```
 
@@ -52,14 +63,28 @@ python app.py
 - 支持 MathJax 数学公式渲染，样式与 Anki 内部一致。
 - “刷新预览”可手动刷新右侧渲染效果。
 - “清空”可一键清空所有字段。
+- **预览区屏幕样式会自动同步当前模板的 `.card` 样式**，实现与 Anki 卡片一致的宽度、背景、圆角等外观。
+
+---
+
+## 模板机制说明
+
+- `templates/` 目录下每个子文件夹即为一个 Anki 模板，需包含：
+  - `front.html`：正面模板（Mustache语法）
+  - `back.html`：背面模板（Mustache语法）
+  - `style.css`：卡片样式（可选，建议包含 `.card` 类）
+  - `fields_data.json`：字段数据（可选）
+- 支持多个模板切换，切换时字段、样式、预览区自动刷新。
+- **如果模板的 style.css 中包含 `.card` 类，预览区会自动应用其样式；否则恢复为默认屏幕样式。**
 
 ---
 
 ## 常见问题
 
 1. **预览渲染不正常/样式错乱？**
-   - 请确保 `static/back.html`、`static/front.html`、`static/style.css` 都存在且内容完整。
+   - 请确保模板文件夹下 `front.html`、`back.html`、`style.css` 都存在且内容完整。
    - 若有自定义模板，需保持 Mustache 语法（`{{#xxx}}...{{/xxx}}`）。
+   - 若 `.card` 样式未生效，检查 style.css 是否正确书写。
 
 2. **字体文件缺失？**
    - 若有字体需求，请将字体文件放入 `static/` 目录。
@@ -72,5 +97,6 @@ python app.py
 ## 其它说明
 
 - 本工具仅用于本地预览和调试 Anki 模板，不会影响你的 Anki 数据库。
-- 如需扩展字段、分组、交互等，可直接修改 `form.html`。
+- 如需扩展字段、分组、交互等，可直接修改 `form.html` 和 `form.js`。
+- 预览区屏幕样式同步机制支持自定义扩展，如需支持 `.math-card` 等其它主类可参考源码扩展。
 - 如遇问题欢迎反馈。 
