@@ -12,7 +12,7 @@ def get_template_dirs():
     return [
         d for d in os.listdir(TEMPLATE_BASE)
         if os.path.isdir(os.path.join(TEMPLATE_BASE, d)) and
-           all(os.path.exists(os.path.join(TEMPLATE_BASE, d, f)) for f in ['front.html', 'back.html', 'style.css', 'fields_data.json'])
+           all(os.path.exists(os.path.join(TEMPLATE_BASE, d, f)) for f in ['front.html', 'back.html'])
     ]
 
 def scan_template_fields(tpl_name):

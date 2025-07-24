@@ -1,12 +1,20 @@
 :root {
   --base-font-size: 16px;
 }
+
+
+.card {
+  font-family: Arial, serif;
+  font-size: 17px;
+  text-align: left;
+  background-color: #272822
+}
 .small-text {
   font-size: calc(var(--base-font-size) * 0.75);
 }
 .front-container {
-  max-width: 600px;
-  margin: 20px auto 0 auto;
+  max-width: 100%;
+  margin: 0 auto 0 auto;
   padding: 10px 10px;
   background: linear-gradient(135deg, #e5e5e5, #a0a0a0); /* 渐变从浅灰到中灰 */
   /* 确保文字在渐变背景下清晰可见 */
@@ -22,7 +30,7 @@
 
 
 .question {
-  max-width: 600px;           /* 最大宽度，适合桌面和手机 */
+  /* max-width: 100%; */
   padding: 10px 10px;         /* 内边距，内容不贴边 */
   background: #f9fafd;        /* 柔和浅色背景 */
   border-radius: 14px;        /* 圆角 */
