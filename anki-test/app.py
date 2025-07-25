@@ -114,5 +114,38 @@ def preview(side):
 def templates_static_files(tpl, filename):
     return send_from_directory(os.path.join(TEMPLATE_BASE, tpl), filename)
 
+@app.route('/panel/local')
+def panel_local():
+    return render_template('panel_local.html')
+
+@app.route('/panel/ac')
+def panel_ac():
+    return render_template('panel_ac.html')
+
+@app.route('/anki/decks')
+def anki_decks():
+    from anki_connect import deckNames, findCards, cardsInfo
+    result = deckNames()
+    return jsonify(result)
+
+@app.route('/anki/cards')
+def anki_cards():
+    from anki_connect import deckNames, findCards, cardsInfo
+    deck = request.args.get('deck')
+    if not deck:
+        return jsonify({'error': 'no deck'})
+    result = findCards({'query': f'deck:{deck}'})
+    return jsonify(result)
+
+@app.route('/anki/cards_info')
+def anki_cards_info():
+    from anki_connect import deckNames, findCards, cardsInfo
+    ids = request.args.get('ids')
+    if not ids:
+        return jsonify({'error': 'no ids'})
+    id_list = [int(i) for i in ids.split(',') if i.isdigit()]
+    result = cardsInfo({'cards': id_list})
+    return jsonify(result)
+
 if __name__ == '__main__':
     app.run(debug=True) 

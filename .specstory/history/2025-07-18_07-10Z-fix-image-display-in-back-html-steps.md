@@ -32,7 +32,15 @@ _**User**_
 
 _**Assistant**_
 
+<details><summary>Edit file: custom1/back.html</summary>
+
+undefined
+
+**Chunk 1**
+Lines added: 1, lines removed: 1
+
 ```diff
+@@ -12,5 +12,5 @@
     <div class="steps-container">
       <div class="section-title">解题步骤</div>
 -     <div id="stepsContent"></div>
@@ -41,7 +49,11 @@ _**Assistant**_
     {{/Steps}}
 ```
 
+**Chunk 2**
+Lines added: 6, lines removed: 16
+
 ```diff
+@@ -40,21 +40,11 @@
   
   <script>
 - // 步骤处理函数 - 直接显示所有步骤
@@ -71,6 +83,8 @@ _**Assistant**_
   
 ```
 
+</details>
+
 ---
 
 已将 `back.html` 的步骤分割与渲染逻辑修改为和你提供的参考代码一致：  
@@ -90,7 +104,15 @@ CommonMistakes 也参考上面方法修改
 
 _**Assistant**_
 
+<details><summary>Edit file: custom1/back.html</summary>
+
+undefined
+
+**Chunk 1**
+Lines added: 1, lines removed: 1
+
 ```diff
+@@ -33,5 +33,5 @@
     <div class="mistake-box">
       <div class="section-title" style="margin: 4px 0;">易错警示</div>
 -     <ul class="mistake-list" id="mistakesList"></ul>
@@ -99,7 +121,11 @@ _**Assistant**_
     {{/CommonMistakes}}
 ```
 
+**Chunk 2**
+Lines added: 6, lines removed: 17
+
 ```diff
+@@ -49,22 +49,11 @@
   }
   
 - // 易错点处理
@@ -130,6 +156,8 @@ _**Assistant**_
   
 ```
 
+</details>
+
 ---
 
 已将 CommonMistakes 的渲染方式也改为和步骤分割一致，直接用 innerHTML 分割并渲染，支持 HTML 标签（如图片）正常显示。  
@@ -158,7 +186,15 @@ Image
 
 _**Assistant**_
 
+<details><summary>Edit file: custom1/back.html</summary>
+
+undefined
+
+**Chunk 1**
+Lines added: 3, lines removed: 3
+
 ```diff
+@@ -16,10 +16,10 @@
     {{/Steps}}
     
 -   {{#KeyConcept}}
@@ -174,7 +210,11 @@ _**Assistant**_
     {{#Formula}}
 ```
 
+**Chunk 2**
+Lines added: 3, lines removed: 3
+
 ```diff
+@@ -30,10 +30,10 @@
     {{/Formula}}
     
 -   {{#CommonMistakes}}
@@ -190,9 +230,19 @@ _**Assistant**_
   
 ```
 
+</details>
+
 ---
 
+<details><summary>Edit file: custom1/front.html</summary>
+
+undefined
+
+**Chunk 1**
+Lines added: 4, lines removed: 4
+
 ```diff
+@@ -11,12 +11,12 @@
     
     <div class="card-footer">
 -     {{#Difficulty}}
@@ -211,7 +261,11 @@ _**Assistant**_
       <div class="settings-button small-text" id="settingsButton" onclick="toggleSettingsModal()">
 ```
 
+**Chunk 2**
+Lines added: 2, lines removed: 2
+
 ```diff
+@@ -57,6 +57,6 @@
   <script>
   // 更新难度显示
 - function updateDifficultyStars() {
@@ -222,7 +276,11 @@ _**Assistant**_
       const level = parseInt(display.textContent);
 ```
 
+**Chunk 3**
+Lines added: 1, lines removed: 1
+
 ```diff
+@@ -156,5 +156,5 @@
     
     // 更新难度显示
 -   updateDifficultyStars();
@@ -230,6 +288,8 @@ _**Assistant**_
     
     // 初始化设置
 ```
+
+</details>
 
 ---
 
@@ -262,16 +322,24 @@ _**Assistant**_
         
 | File | Line | Match |
 |------|------|-------|
-| `file:///d%3A/vc/anki-template/custom1/style.css` | L59 | `.difficulty-badge {` |
-| `file:///d%3A/vc/anki-template/custom1/style.css` | L70 | `.difficulty-level {` |
-| `file:///d%3A/vc/anki-template/custom1/style.css` | L59 | `.difficulty-badge {` |
-| `file:///d%3A/vc/anki-template/custom1/style.css` | L70 | `.difficulty-level {` |
+| `file:///d%3A/vc/anki-template/custom1/style.css` | L60 | `.difficulty-badge {` |
+| `file:///d%3A/vc/anki-template/custom1/style.css` | L71 | `.difficulty-level {` |
+| `file:///d%3A/vc/anki-template/custom1/style.css` | L60 | `.difficulty-badge {` |
+| `file:///d%3A/vc/anki-template/custom1/style.css` | L71 | `.difficulty-level {` |
 
 </details>
 
 ---
 
+<details><summary>Edit file: custom1/style.css</summary>
+
+undefined
+
+**Chunk 1**
+Lines added: 1, lines removed: 1
+
 ```diff
+@@ -58,5 +58,5 @@
   
   /* 难度标记 */
 - .difficulty-badge {
@@ -280,7 +348,11 @@ _**Assistant**_
     border: 1px solid #dee2e6;
 ```
 
+**Chunk 2**
+Lines added: 1, lines removed: 1
+
 ```diff
+@@ -69,5 +69,5 @@
   }
   
 - .difficulty-level {
@@ -289,9 +361,19 @@ _**Assistant**_
     font-weight: bold;
 ```
 
+</details>
+
 ---
 
+<details><summary>Edit file: custom1/front.html</summary>
+
+undefined
+
+**Chunk 1**
+Lines added: 2, lines removed: 2
+
 ```diff
+@@ -12,7 +12,7 @@
     <div class="card-footer">
       {{#Diff}}
 -     <div class="difficulty-badge small-text">
@@ -302,6 +384,8 @@ _**Assistant**_
           {{Diff}}
         </span>
 ```
+
+</details>
 
 ---
 

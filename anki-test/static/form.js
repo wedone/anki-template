@@ -239,6 +239,15 @@
       });
     }
 
+    // ========== 模式切换开关逻辑 ==========
+    const modeToggle = document.getElementById('modeToggle');
+    const modeLabel = document.getElementById('modeLabel');
+    function updateModeLabel() {
+      modeLabel.textContent = modeToggle.checked ? '本地模式' : 'AnkiConnect模式';
+    }
+    modeToggle.addEventListener('change', updateModeLabel);
+    updateModeLabel();
+
     // 页面加载时
     window.onload = async function() {
       await loadTemplateList();
@@ -246,5 +255,6 @@
       await syncCardStyleToPreviewFrame(currentTemplate);
       setPreviewSide('front');
       updateFieldStatus();
+      setPreviewMode('mobile');
     }
   // </script>
