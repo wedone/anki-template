@@ -1,0 +1,548 @@
+/*
+ *  Useful tools
+ *  ============
+ *  · https://www.audioeye.com/color-contrast-checker/ --> check if contrast for accessibility is met.
+ *  · https://www.canva.com/colors/color-wheel/ --> find colors, including complementary, triadic, ect.
+ *  · https://www.figma.com/resource-library/what-are-triadic-colors/#_5-alternatives-to-triadic-color-schemes --> short overview over what triadic, analogous, ect. is.
+ *  · https://mycolor.space/gradient --> generate a css gradient.
+ *  · https://github.com/ankidroid/Anki-Android/wiki/Development-Guide#html-javascript-inspection --> debugging on AnkiDroid.
+ */
+
+
+/*******************************************************************************
+ * FRONT AND BACK
+ ******************************************************************************/
+
+/*
+ *  Global (this affects everything)
+ */
+
+ @font-face {
+	font-family: myfont;
+	src: url("_InclusiveSans-VariableFont_wght.ttf");
+}
+
+:root {
+	font-size: 22.5px;
+	font-family: "myfont";
+	
+	/**** Custom Global Variables ****/
+	--max-character-limit-per-line: 65ch;             /* Text should not be longer than 65 characters to increase readability.*/
+	
+	--sections-line-height:   1.25;           /* Used to unify line height. */
+	--sections-border-radius: 0.50rem;        /* Used to unify the border radius. */
+	--sections-padding:       1.25rem;        /* Used to unify the padding. */
+	--sections-top-margin:    0.85rem;        /* My sections are separated by a margin. This value set said margin. */
+	
+	--divider-margin-top-bottom: 1rem;       /* Used to unify top and bottom margin. */
+	
+	
+}
+
+/* custom variables specific to light mode */
+body:not(.nightMode),
+[data-bs-theme="light"] {
+	/*
+	 *  Sections (tag-indicator, question+answer, remarks-and-examples, sources)
+	 */
+	--sections-border: 2px solid #999;    /* Used to unify border. It improves the visuals between section and background color. */
+	--sections-box-shadow: 1px 1px 0px rgba(0, 0, 0, 0.15); /* Used to unify box-shadow. With this, the sections look a bit more lifted up, as if they were a sheet of paper. */
+	
+	
+	/*
+	 *  Selection
+	 */
+	--selection-background-color: #ffd700;
+	
+	
+	/*
+	 *  Lists (ul, ol, li)
+	 */
+	--li-even-background-color: #f4f4f4;    /* The color for every even li element. */
+	--li-odd-background-color:  #F1F7E3;    /* The color for every  odd li element. */
+	
+	
+	/*
+	 *  Images
+	 */
+	--img-filter: none;
+	
+	
+	/*
+	 *  Desk
+	 */
+	--desk-background-color: #ececec;    /* The background color of the desk, were the card is placed down on. */
+	
+	
+	/*
+	 *  Tag indicator
+	 */
+	--tag-psychologie-psychotherapie: rgba(175, 220, 175, 1);
+	--tag-it: rgba(250, 127, 127, 1);
+	
+	
+	/*
+	 *  Flashcard
+	 */
+	--flashcard-background-color: #fdfdfd;
+	--flashcard-color: rgba(0, 0, 0, 0.87);
+	
+	
+	/*
+	 *  Codeblock (used for IT cards)
+	 */
+	--codeblock-border-left: 4px solid rgba(250, 127, 127, 1); /* The color used here is the same as the color of the tag-it indicator background */
+	--codeblock-background-color: #f4f4f4;
+	
+	
+	/*
+	 *  Lang Marker
+	 */
+	--lang-marker-color: rgba(0, 0, 255, 0.87);
+	
+	
+	/*
+	 *  Remarks and examples
+	 */
+	--remarks-and-examples-background-color: #fbf0c4;
+	
+	
+	/*
+	 *  Sources
+	 */
+	--sources-background-color: #e0f2f7;
+}
+
+
+/* custom variables specific to dark mode */
+.nightMode,
+[data-bs-theme="dark"] {
+	/*
+	 *  Sections (tag-indicator, question+answer, remarks-and-examples, sources)
+	 */
+	--sections-border: 2px solid #a2a2a2;    /* Used to unify border. It improves the visuals between section and background color. */
+	--sections-box-shadow: unset;            /* Used to unify box-shadow. In dark mode, a shadow makes no sense. Let's thus disable it. */
+	
+	
+	/*
+	 *  Selection
+	 */
+	--selection-background-color: #b8860b;
+	
+	
+	/*
+	 *  Lists (ul, ol, li)
+	 */
+	--li-even-background-color: #1a1a1a;    /* The color for every even li element. */
+	--li-odd-background-color:  #311D1D;    /* The color for every  odd li element. */
+	
+	
+	/*
+	 *  Images
+	 */
+	--img-filter: brightness(0.86);;
+	
+	
+	/*
+	 *  Desk
+	 */
+	--desk-background-color: #1a1a1a;    /* The background color of the desk, were the card is placed down on. */
+	
+	
+	/*
+	 *  Tag indicator
+	 */
+	--tag-psychologie-psychotherapie: rgba(90, 125, 90, 0.6);
+	--tag-it: rgba(250, 127, 127, 0.6);
+	
+	
+	/*
+	 *  Flashcard
+	 */
+	--flashcard-background-color: #2b2b2b;
+	--flashcard-color: rgba(250, 250, 250, 0.87);
+	
+	
+	/*
+	 *  Codeblock (used for IT cards)
+	 */
+	--codeblock-border-left: 4px solid rgba(250, 127, 127, 0.6); /* The color used here is the same as the color of the tag-it indicator background */
+	--codeblock-background-color: #1b1b1b;
+	
+	
+	/*
+	 *  Lang Marker
+	 */
+	--lang-marker-color: #6699FF;
+	
+	
+	/*
+	 *  Remarks and examples
+	 */
+	--remarks-and-examples-background-color: #453905;
+	
+	
+	/*
+	 *  Sources
+	 */
+	--sources-background-color: #0c272f;
+}
+
+::selection {
+	background-color: var(--selection-background-color);
+}
+
+.hidden_on_front {
+	display: none;
+}
+
+#all {
+	max-width: var(--max-character-limit-per-line);
+	margin: 0 auto;
+	
+	/* Hyphenate words if screen is too small. (TODO: Note this doesn't work on desktop) */
+	hyphens: auto;
+	/*
+	 *  1st value: Minimum word length before words should be hyphenated is 5 chars.
+	 *  2nd value: Minimum characters before the hyphen is 5 chars.
+	 *  3rd value: Minimum characters after hyphen is auto.
+	 *  TODO: Note that this currently doesn't work on AnkiDroid. It has no effect at all.
+	 */
+	/*hyphenate-limit-chars: 5 5 auto;*/
+}
+
+.MathJax {
+	font-size: 130% !important;
+}
+
+
+
+
+/*
+ *  Space list elements apart and make them colored, to improve readability.
+ */
+
+ul, ol {
+	margin-block-start: 0.5em;
+	margin-block-end: 0;
+}
+
+li:not(:last-child) {
+	margin-bottom: 0.2rem;
+}
+
+li:nth-child(even) {
+	background-color: var(--li-even-background-color);
+	padding: 0.2rem;
+}
+
+li:nth-child(odd) {
+	padding: 0.2rem;
+}
+
+aside#back_remarks_and_examples li:not(:last-child) {
+	margin-bottom: 0.15em;
+}
+
+aside#back_remarks_and_examples li {
+	background-color: initial;
+	padding: 0.15rem;
+}
+
+
+
+/*
+ *  Contains my Card "Desk" (the area where 'flashcard' is displayed)
+ */
+
+#qa {
+	padding: 0 5vw;
+}
+
+@media only screen and (max-width: 600px) {
+	#qa {
+		padding: 0 0;
+	}
+}
+
+
+
+
+/*
+ *  This is the "Desk" (the area where 'flashcard' are displayed)
+ */
+
+body {
+	background-color: var(--desk-background-color) !important;
+	padding: 0.33rem;
+}
+
+body::-webkit-scrollbar {
+	display: none;
+}
+
+
+
+
+/*
+ *  Tag indicator
+ */
+
+/* Shows a color depending on the topic of the cards */
+#tag_indicator {
+	background: lightgray;
+	text-align: center;
+	border-radius: var(--sections-border-radius);
+	border: var(--sections-border);
+	padding: 0.25rem;
+	overflow: hidden;
+	display: flex;
+	align-items: center;
+	margin: 0 auto;
+	min-height: 1.5rem;
+	max-height: 2rem;
+	min-width: 80%;
+	box-shadow: var(--sections-box-shadow);
+}
+
+#tag_indicator_label {
+	font-size: 0.7rem;
+	flex: 1;
+}
+
+/* Styles for the tag indicators*/
+
+.tag_psychologie_psychotherapie {
+	background: var(--tag-psychologie-psychotherapie) !important;
+}
+
+.tag_it {
+	background: var(--tag-it) !important;
+}
+
+
+
+
+/*
+ *  Flashcard
+ */
+
+#flashcard {
+	color: var(--flashcard-color);
+	background-color: var(--flashcard-background-color);
+	border-radius: var(--sections-border-radius);
+	padding: var(--sections-padding);
+	margin-top: var(--sections-top-margin);
+	margin-bottom: 0;
+	margin-right: auto;
+	margin-left: auto;
+	min-width: 80%;
+	line-height: var(--sections-line-height);
+	word-wrap: break-word;
+	border: var(--sections-border);
+	box-shadow: var(--sections-box-shadow);
+}
+
+
+
+
+/*
+ *  Images
+ */
+
+img {
+	display: block;
+	max-height: 50vh; /* max height of images is 50% of the viewport height (if set to 50vh) */
+	margin-top: var(--sections-top-margin);
+	margin-bottom: auto;
+	margin-right: auto;
+	margin-left: auto;
+	border-radius: var(--sections-border-radius);
+	border: var(--sections-border);
+	filter: var(--img-filter);
+}
+
+
+
+/*
+ *  Fullscreen Image Viewer
+ */
+
+#img_viewer {
+	display: none;
+	position: fixed;
+	z-index: 1000;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+	background-color: var(--desk-background-color) !important;
+}
+
+.img_increased_size {
+	margin: auto;
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: contain;
+	max-height: 100%;
+}
+
+
+
+
+/*
+ *  Codeblock (used for the IT cards)
+ */
+
+code {
+	background-color: var(--codeblock-background-color);
+	border: var(--sections-border);
+	border-left: var(--codeblock-border-left);
+	font-family: myfont monospace;
+	font-size: 80%;
+	max-width: 100%;
+	overflow: auto;
+	padding: 1rem 1.25rem;
+	display: block;
+	hyphens: none;
+}
+
+/*
+ *  Used as a class e.g. in the question, to ask something like "What is git",
+ *  where git is surrounded by <code class="code-inline">git</code>
+ */
+
+.code-inline {
+	display: initial;
+	padding: 0.25rem 0.5rem;
+	border: var(--sections-border);
+	border-radius: var(--sections-border-radius);
+}
+
+
+
+
+/*
+ *  Lang marker (Used to highlight the text "[en]" or similar)
+ */
+
+.lang-marker {
+	color: var(--lang-marker-color);
+}
+
+
+
+
+/*******************************************************************************
+ * FRONT
+ ******************************************************************************/
+
+/*
+ *  Question
+ */
+
+#front_question {
+}
+
+#front_picture {
+}
+
+
+
+
+/*******************************************************************************
+ * BACK
+ ******************************************************************************/
+
+/*
+ *  Divider (line that separates question and answer)
+ */
+
+#divider {
+	background-color: transparent;
+	border: none;
+	border-bottom: var(--sections-border);
+	margin-top: var(--divider-margin-top-bottom);
+	margin-bottom: var(--divider-margin-top-bottom);
+	margin-left: -0.1rem;
+	margin-right: -0.1rem;
+	padding: 0;
+}
+
+
+
+
+/*
+ *  Answer Text Field
+ */
+
+#back_answer {
+}
+
+#back_picture {
+}
+
+
+
+
+/*
+ *  Remarks and Examples Field
+ */
+
+aside#back_remarks_and_examples {
+	font-size: 80%;
+	border: var(--sections-border);
+	border-radius: var(--sections-border-radius);
+	padding: var(--sections-padding);
+	margin-top: var(--sections-top-margin);
+	box-shadow: var(--sections-box-shadow);
+	background-color: var(--remarks-and-examples-background-color);
+	color: var(--flashcard-color);
+}
+
+
+
+
+/*
+ *  Sources Field
+ */
+
+footer {
+	margin-top: var(--sections-top-margin);
+}
+
+#back_sources {
+	font-size: 60%;
+	line-height: var(--sections-line-height);
+	border: var(--sections-border);
+	border-radius: var(--sections-border-radius);
+	padding: var(--sections-padding);
+	background-color: var(--sources-background-color);
+	box-shadow: var(--sections-box-shadow);
+	color: var(--flashcard-color);
+}
+
+.back_sources_elements {
+	margin-bottom: 0.125rem;
+	/* This will indent lines if they have to wrap */
+	text-indent: -2em;
+	padding-left: 2em;
+}
+
+
+
+
+/*
+ *  Titles used in 'back_remarks_and_examples' and 'back_sources'
+ */
+
+section h1 {
+	text-decoration: underline;
+	color: inherit;
+	font-size: inherit;
+	font-weight: 600;
+	margin-top: 0; /* Turn off to prevent interference with other styles */
+	margin-bottom: 0.086em;
+}

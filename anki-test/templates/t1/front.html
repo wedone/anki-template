@@ -1,0 +1,41 @@
+<div id="reading">{{Reading}}</div>
+<div id="listening">{{Listening}}</div>
+<div id="translating">{{Translating}}</div>
+
+<script>
+	var date = new Date();
+	var day = date.getDay();
+	
+	switch (day) {
+		case 0:
+			console.log("It is Sunday.");
+			/* Show translating */
+			document.getElementById('reading').classList.add("hidden");
+			document.getElementById('listening').classList.add("hidden");
+			break;
+		case 1:
+			console.log("It is Monday.");
+			/* Show listening */
+			document.getElementById('reading').classList.add("hidden");
+			document.getElementById('translating').classList.add("hidden");
+			break;
+		case 2:
+			console.log("It is Tuesday.");
+			/* Show reading */
+			document.getElementById('listening').classList.add("hidden");
+			document.getElementById('translating').classList.add("hidden");
+			break;
+		case 3:
+			console.log("It is Wednesday.");
+			break;
+		case 4:
+			console.log("It is Thursday.");
+			break;
+		case 5:
+			console.log("It is Friday.");
+			break;
+		case 6:
+			console.log("It is Saturday.");
+			break;
+	}
+</script>

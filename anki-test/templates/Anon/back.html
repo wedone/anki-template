@@ -1,0 +1,16 @@
+{{FrontSide}}
+
+<!--
+	The front side of the card contains all fields and the corresponding
+	javascript. But obviously only the question should be on the front.
+	That's why the answer and all information meant for the backside of the
+	card are hidden with a css class. To show those elements on the backside
+	of the card, the css class needs to be removed. That's what's done here.
+-->
+<script>
+	document.getElementById('divider').classList.remove("hidden_on_front");
+	document.getElementById('back_answer').classList.remove("hidden_on_front");
+	document.getElementById('back_picture').classList.remove("hidden_on_front");
+	document.getElementById('back_remarks_and_examples').classList.remove("hidden_on_front");
+	document.getElementById('back_sources').classList.remove("hidden_on_front");
+</script>
