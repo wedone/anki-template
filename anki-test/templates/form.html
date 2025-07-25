@@ -10,7 +10,7 @@
   <div class="form-title">Anki 数学问答模板预览</div>
   <div class="main-flex">
     <div class="form-panel">
-      <!-- 模式切换开关（只出现一次） -->
+      <!-- 模式切换开关 -->
       <div style="margin-bottom: 10px; display: flex; align-items: center; gap: 12px; min-width: 120px;">
         <label for="modeToggle" style="font-weight:bold;color:#2980b9;">模式切换</label>
         <label class="ios-switch">
@@ -19,24 +19,7 @@
         </label>
         <span id="modeLabel" style="font-size:13px;color:#666;">本地模式</span>
       </div>
-      <div style="margin-bottom: 12px;">
-        <label for="templateSelect" style="font-weight:bold;color:#2980b9;">选择模板：</label>
-        <select id="templateSelect"></select>
-      </div>
-      <form id="ankiForm" method="post" target="previewFrame" autocomplete="off">
-        <div class="btn-group">
-          <button type="button" class="side-btn" id="frontBtn">正面预览</button>
-          <button type="button" class="side-btn" id="backBtn">背面预览</button>
-          <button class="btn" type="submit" id="refreshBtn">刷新预览</button>
-          <button class="btn" type="button" onclick="clearForm()" style="background:#e74c3c;">清空内容</button>
-          <button class="btn" type="button" id="scanFieldsBtn" style="background:#27ae60;">扫描字段</button>
-          <button class="btn" type="button" id="saveServerBtn" style="background:#f39c12;">保存数据</button>
-        </div>
-        <input type="hidden" name="side" id="sideInput" value="front">
-        <div class="field-grid" id="fieldGrid"></div>
-        <div id="fieldInputFloat" class="field-input-float" style="display:none;"></div>
-        <div id="hiddenFields" style="display:none;"></div>
-      </form>
+      <div id="modePanel"></div>
     </div>
     <div class="preview-panel-group">
       <div class="preview-panel" id="previewPanel">
